@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יומן שמחות סמינר מעלות</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>יומן שמחות סמינר מעלות</h1>
+            <p class="subtitle">מאגר השמחות המרכזי והעדכני</p>
+            
+            <div class="add-event-container">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform" target="_blank" class="add-event-btn">
+                    <span class="btn-icon">✨</span>
+                    <span>הוספת שמחה חדשה</span>
+                </a>
+            </div>
+        </header>
+        
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="חיפוש לפי כלה, כיתה, מסלול, אולם...">
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">הכל</button>
+            <button class="filter-btn" data-filter="wedding">חתונות</button>
+            <button class="filter-btn" data-filter="engagement">אירוסין</button>
+        </div>
+
+        <div id="events-list" class="events-list"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
