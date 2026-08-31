@@ -1,0 +1,208 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f7f6;
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.main-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.main-header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1.05rem;
+}
+
+/* עיצוב מיוחד ומעודכן לכפתור הוספת שמחה */
+.add-event-container {
+    margin-top: 18px;
+}
+
+.add-event-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 26px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    transition: all 0.3s ease;
+}
+
+.add-event-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.45);
+    background: linear-gradient(135deg, #219150, #27ae60);
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+/* סרגל חיפוש וסינון */
+.search-bar {
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.search-bar input:focus {
+    border-color: #3498db;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.filter-btn {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.filter-btn.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+/* כרטיסיות אירועים */
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.event-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    border-right: 6px solid #3498db;
+}
+
+.event-card.engagement {
+    border-right-color: #e67e22;
+}
+
+.event-main {
+    flex-grow: 1;
+}
+
+.event-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.event-header h3 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.badge.wedding { background-color: #3498db; }
+.badge.engagement { background-color: #e67e22; }
+
+.event-info {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 4px;
+}
+
+.location-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.transit-btn {
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+}
+
+.transit-btn:hover {
+    transform: scale(1.2);
+}
+
+.date-box {
+    text-align: center;
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    min-width: 110px;
+}
+
+.date-box .day {
+    font-weight: bold;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.date-box .hebrew-date {
+    font-size: 0.95rem;
+    color: #2c3e50;
+    margin: 4px 0;
+}
+
+.date-box .days-left {
+    font-size: 0.8rem;
+    color: #e74c3c;
+    font-weight: bold;
+}
