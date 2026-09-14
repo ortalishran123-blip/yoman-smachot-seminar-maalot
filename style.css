@@ -118,7 +118,7 @@ body {
     background: #f5f5f4;
 }
 
-/* תיבת עדכונים עם גובה קבוע וגלילה פנימית (בשמאל) */
+/* תיבת עדכונים עם גובה קבוע וגלילה פנימית (הגודל שביקשת בשמאל) */
 #updates-ticker {
     max-height: 400px;
     overflow-y: auto;
@@ -204,7 +204,7 @@ body {
     padding-left: 5px;
 }
 
-/* עיצוב כרטיסי השמחות במרכז - ממורכז לאמצע המסגרת */
+/* עיצוב כרטיסי השמחות במרכז - שומר על המבנה המקורי אבל ממורכז לאמצע המסגרת */
 .event-row-item {
     background: #ffffff;
     border: 1px solid #dcd3c0;
@@ -213,51 +213,17 @@ body {
     margin-bottom: 14px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: center; /* מרכוז התוכן לאמצע המסגרת */
+    text-align: center;  /* יישור הטקסט לאמצע */
     gap: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    position: relative; /* חובה למיקום התגית בפינה */
-}
-
-/* תגית ספירת הימים בפינה השמאלית של הכרטיס */
-.countdown-badge {
-    position: absolute;
-    top: 12px;
-    left: 15px;
-    padding: 4px 10px;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-/* עיצוב רגיל לימים רחוקים */
-.countdown-badge.normal {
-    background: #f4f0ea;
-    color: #78716c;
-    border: 1px solid #e7dfd3;
-}
-
-/* עיצוב בולט ונועז לאירועים קרובים (שבוע או פחות) */
-.countdown-badge.urgent {
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-    animation: pulse-subtle 2s infinite;
-}
-
-@keyframes pulse-subtle {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.03); }
-    100% { transform: scale(1); }
 }
 
 /* שורה ראשונה: סטטוס, שם, קו הפרדה וכיתה */
 .event-header-row {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* מרכוז אופקי לאמצע */
     gap: 10px;
     flex-wrap: wrap;
     width: 100%;
@@ -311,7 +277,7 @@ body {
 .event-location-row {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* מרכוז אופקי לאמצע */
     gap: 10px;
     font-size: 14px;
     color: #57534e;
