@@ -8,7 +8,6 @@
     --border-color: #e2e8f0;
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
@@ -79,7 +78,6 @@ body {
     font-size: 2.2rem;
     font-weight: 800;
     color: var(--text-main);
-    letter-spacing: -0.02em;
     margin-bottom: 6px;
 }
 
@@ -98,13 +96,11 @@ body {
     cursor: pointer;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    box-shadow: var(--shadow-sm);
+    transition: background-color 0.2s ease;
 }
 
 .btn-add-event:hover, .btn-add-update:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-1px);
 }
 
 .btn-add-update {
@@ -127,7 +123,6 @@ body {
     background: #f1f5f9;
     margin-bottom: 16px;
     outline: none;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .search-box input:focus {
@@ -149,7 +144,6 @@ body {
     cursor: pointer;
     color: var(--text-muted);
     font-weight: 500;
-    transition: all 0.2s ease;
 }
 
 .filter-btn.active {
@@ -157,37 +151,47 @@ body {
     color: #ffffff;
 }
 
+/* תצוגת שורות לאירועים במרכז */
 .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     margin-bottom: 32px;
 }
 
-.event-card {
+.event-row-item {
     background: #ffffff;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 18px;
+    padding: 16px 20px;
     box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.event-card:hover {
+.event-row-item:hover {
     border-color: var(--primary);
     box-shadow: var(--shadow-md);
 }
 
-.card-header-row {
+.event-main-info {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    gap: 12px;
 }
 
-.card-header-row h3 {
-    font-size: 1.1rem;
+.event-main-info h3 {
+    font-size: 1.15rem;
     font-weight: 700;
+}
+
+.event-details-inline {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
 }
 
 .badge {
@@ -205,12 +209,6 @@ body {
 .badge-engagement {
     background: #e0f2fe;
     color: #075985;
-}
-
-.card-details p {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    margin-top: 6px;
 }
 
 .ticker-card {
@@ -246,7 +244,6 @@ body {
     text-align: center;
     color: var(--text-muted);
     padding: 32px;
-    grid-column: 1 / -1;
 }
 
 .about-section {
@@ -270,5 +267,17 @@ body {
     .sidebar {
         position: static;
         max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .event-row-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .event-details-inline {
+        flex-direction: column;
+        gap: 4px;
     }
 }
