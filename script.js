@@ -76,16 +76,19 @@ function renderMainEvents() {
         const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']);
         const hall = getRowValue(item, ['אולם']);
 
+        const classTrackText = [classGroup, track].filter(Boolean).join(' ');
+        const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
+
         html += `
             <div class="event-row-item">
                 <div class="event-main-info">
                     <h3>${name}</h3>
+                    ${classTrackText ? `<div class="event-class-track">${classTrackText}</div>` : ''}
                     ${type ? `<span class="badge ${type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement'}">${type}</span>` : ''}
                 </div>
                 <div class="event-details-inline">
-                    ${(classGroup || track) ? `<span><strong>כיתה/מסלול:</strong> ${classGroup} ${track}</span>` : ''}
                     ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
-                    ${hall ? `<span><strong>אולם:</strong> ${hall}</span>` : ''}
+                    ${hall ? `<span><strong>אולם:</strong> ${hall} <a href="${moovitUrl}" target="_blank" class="moovit-link">מוביט 🚌</a></span>` : ''}
                 </div>
             </div>
         `;
@@ -153,12 +156,11 @@ function renderPastEventsTicker(events) {
         const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']);
         const name = getRowValue(item, ['שם הכלה', 'שם']);
         const classGroup = getRowValue(item, ['כיתה']);
-        const hall = getRowValue(item, ['אולם']);
 
         html += `
             <div class="ticker-card past">
                 <div class="card-title">${name} - ${type}</div>
-                <div class="card-body">${classGroup} | ${hall}</div>
+                ${classGroup ? `<div class="card-body">כיתה: ${classGroup}</div>` : ''}
                 <div class="card-date">${dateHebrew}</div>
             </div>
         `;
