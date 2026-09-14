@@ -1,95 +1,32 @@
-// משתנים גלובליים ונתונים לדוגמה לבדיקת המערכת
-let allEvents = [
-    {
-        "שם הכלה": "רבקה כהן",
-        "חתונה/ אירוסין": "חתונה",
-        "כיתה": "יב 1",
-        "מסלול": "הוראה",
-        "תאריך לועזי": "2026-09-20",
-        "תאריך עברי": "ז' תשרי תשפ\"ז",
-        "אולם": "האצולה בני ברק"
-    },
-    {
-        "שם הכלה": "מיכל לוי",
-        "חתונה/ אירוסין": "אירוסין",
-        "כיתה": "יב 2",
-        "מסלול": "גרפיקה",
-        "תאריך לועזי": "2026-09-15",
-        "תאריך עברי": "ב' תשרי תשפ\"ז",
-        "אולם": "ארמונות חן ירושלים"
-    },
-    {
-        "שם הכלה": "שרה ישראלי",
-        "חתונה/ אירוסין": "חתונה",
-        "כיתה": "יג",
-        "מסלול": "תכנות",
-        "תאריך לועזי": "2026-10-01",
-        "תאריך עברי": "י\"ח תשרי תשפ\"ז",
-        "אולם": "ווג בני ברק"
-    }
-];
+const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv';
+const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
 
+const EVENT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform';
+const UPDATE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdkYAUSIoFMBtpxSyiMzAp8fSZlY2LQLbHHLHKDy1A2v_PinA/viewform?usp=dialog';
+
+let allEvents = [];
 let currentFilter = 'all';
 
-// טעינת הנתונים בעליית העמוד
 document.addEventListener('DOMContentLoaded', () => {
-    renderMainEvents();
-
-    // הגדרת האזנה לחיפוש
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            renderMainEvents();
-        });
-    }
+    loadMainEvents();
+    loadUpdatesTicker();
+    setupEventListeners();
+    setupFormButtons();
 });
 
-// פונקציית עזר לשליפת ערך מתוך השורה לפי שמות שדות אפשריים
-function getRowValue(item, possibleKeys) {
-    for (let key of possibleKeys) {
-        if (item[key] !== undefined && item[key] !== null) {
-            return item[key].toString().trim();
+function loadMainEvents() {
+    Papa.parse(MAIN_CSV_URL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+            allEvents = results.data;
+            renderMainEvents();
+            renderPastEventsTicker(allEvents);
         }
-    }
-    return '';
-}
-
-// פונקציה בטוחה להמרת תאריך בלי לגרום לקריסות
-function parseDate(dateStr) {
-    if (!dateStr) return null;
-    
-    let parts = dateStr.split(/[\/\-\.]/);
-    if (parts.length === 3) {
-        let day = parseInt(parts[0], 10);
-        let month = parseInt(parts[1], 10) - 1;
-        let year = parseInt(parts[2], 10);
-        if (year < 100) year += 2000;
-        let date = new Date(year, month, day);
-        if (!isNaN(date.getTime())) return date;
-    }
-    
-    let parsed = new Date(dateStr);
-    if (!isNaN(parsed.getTime())) return parsed;
-
-    return null;
-}
-
-// פונקציה לעדכון מסננים (הכל, חתונות, אירוסין)
-function setFilter(filterType) {
-    currentFilter = filterType;
-    
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
     });
-    
-    if (filterType === 'all') document.getElementById('filter-all')?.classList.add('active');
-    if (filterType === 'wedding') document.getElementById('filter-wedding')?.classList.add('active');
-    if (filterType === 'engagement') document.getElementById('filter-engagement')?.classList.add('active');
-
-    renderMainEvents();
 }
 
-// רינדור האירועים המרכזיים בעמוד
 function renderMainEvents() {
     const listContainer = document.getElementById('events-list');
     if (!listContainer) return;
@@ -107,7 +44,7 @@ function renderMainEvents() {
         if (dateStr) {
             const eventDate = parseDate(dateStr);
             if (eventDate && eventDate.getTime() < today.getTime()) {
-                return false; 
+                return false;
             }
         }
 
@@ -124,7 +61,13 @@ function renderMainEvents() {
     });
 
     if (filtered.length === 0) {
-        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
+        if (currentFilter === 'engagement') {
+            listContainer.innerHTML = '<div class="no-results">אין אירוסין בקרוב</div>';
+        } else if (currentFilter === 'wedding') {
+            listContainer.innerHTML = '<div class="no-results">אין חתונות בקרוב</div>';
+        } else {
+            listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
+        }
         return;
     }
 
@@ -134,36 +77,8 @@ function renderMainEvents() {
         const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim();
         const classGroup = getRowValue(item, ['כיתה']);
         const track = getRowValue(item, ['מסלול']);
-        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']);
-        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
+        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']);
         const hall = getRowValue(item, ['אולם']);
-
-        let countdownBadgeHtml = '';
-        if (dateStr) {
-            const eventDate = parseDate(dateStr);
-            if (eventDate) {
-                const diffTime = eventDate.getTime() - today.getTime();
-                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
-                let countdownText = '';
-                let isUrgent = diffDays <= 7;
-
-                if (diffDays === 0) {
-                    countdownText = 'היום!';
-                } else if (diffDays === 1) {
-                    countdownText = 'מחר';
-                } else if (diffDays === 2) {
-                    countdownText = 'מחרתיים';
-                } else if (diffDays === 7) {
-                    countdownText = 'עוד שבוע';
-                } else {
-                    countdownText = `עוד ${diffDays} ימים`;
-                }
-
-                const badgeStyleClass = isUrgent ? 'countdown-badge urgent' : 'countdown-badge normal';
-                countdownBadgeHtml = `<div class="${badgeStyleClass}">${countdownText}</div>`;
-            }
-        }
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement';
@@ -178,7 +93,6 @@ function renderMainEvents() {
 
         html += `
             <div class="event-row-item">
-                ${countdownBadgeHtml}
                 <div class="event-header-row">
                     ${type ? `<span class="badge ${badgeClass}">${type}</span>` : ''}
                     <h3 class="event-main-info">${name}</h3>
@@ -198,4 +112,181 @@ function renderMainEvents() {
     });
 
     listContainer.innerHTML = html;
+}
+
+function getRowValue(row, possibleKeys) {
+    for (let key of possibleKeys) {
+        if (row[key] !== undefined && row[key] !== null) {
+            return row[key].toString();
+        }
+    }
+    return '';
+}
+
+function setupEventListeners() {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', renderMainEvents);
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            currentFilter = e.currentTarget.getAttribute('data-filter');
+            renderMainEvents();
+        });
+    });
+}
+
+function setupFormButtons() {
+    document.querySelectorAll('button, a').forEach(el => {
+        const text = el.textContent || '';
+        if (text.includes('הוספת שמחה חדשה')) {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(EVENT_FORM_URL, '_blank');
+            });
+        }
+        if (text.includes('הוספת עדכון')) {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(UPDATE_FORM_URL, '_blank');
+            });
+        }
+    });
+}
+
+function renderPastEventsTicker(events) {
+    const pastContainer = document.getElementById('past-events-ticker');
+    if (!pastContainer) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const pastEvents = events.filter(item => {
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']);
+        if (!dateStr) return false;
+        
+        const eventDate = parseDate(dateStr);
+        if (!eventDate) return false;
+
+        const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24));
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']).trim();
+
+        if (type.includes('חתונה') && diffDays > 0 && diffDays <= 30) return true;
+        if (type.includes('אירוסין') && diffDays > 0 && diffDays <= 10) return true;
+
+        return false;
+    });
+
+    if (pastEvents.length === 0) {
+        pastContainer.innerHTML = '<div class="ticker-card past">אין אירועים שהיו לאחרונה</div>';
+        return;
+    }
+
+    let html = '';
+    pastEvents.forEach(item => {
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']);
+        const eventDate = parseDate(dateStr);
+        const diffDays = eventDate ? Math.floor((today - eventDate) / (1000 * 60 * 60 * 24)) : 0;
+
+        let timeAgoText = '';
+        if (diffDays === 0) {
+            timeAgoText = 'היום!';
+        } else if (diffDays === 1) {
+            timeAgoText = 'אתמול';
+        } else if (diffDays === 2) {
+            timeAgoText = 'שלשום';
+        } else {
+            timeAgoText = `לפני ${diffDays} ימים`;
+        }
+
+        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']);
+        const name = getRowValue(item, ['שם הכלה', 'שם']);
+        const classGroup = getRowValue(item, ['כיתה']);
+
+        html += `
+            <div class="ticker-card past" style="position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 6px;">${timeAgoText}</div>
+                <div class="card-title" style="margin-top: 5px;">${name} - ${type}</div>
+                ${classGroup ? `<div class="card-body">כיתה: ${classGroup}</div>` : ''}
+                <div class="card-date">${dateHebrew}</div>
+            </div>
+        `;
+    });
+
+    pastContainer.innerHTML = html;
+}
+
+function loadUpdatesTicker() {
+    Papa.parse(UPDATES_CSV_URL, {
+        download: true,
+        header: false,
+        skipEmptyLines: true,
+        complete: (results) => {
+            const rows = results.data.slice(1);
+            renderUpdatesTicker(rows);
+        }
+    });
+}
+
+function renderUpdatesTicker(rows) {
+    const updatesContainer = document.getElementById('updates-ticker');
+    if (!updatesContainer) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const activeUpdates = [];
+
+    rows.forEach(row => {
+        const title = row[1] ? row[1].toString().trim() : '';
+        const content = row[2] ? row[2].toString().trim() : '';
+        const expDateStr = row[3] ? row[3].toString().trim() : '';
+
+        if (!title && !content) return;
+
+        if (expDateStr) {
+            const expDate = parseDate(expDateStr);
+            if (expDate && expDate < today) return;
+        }
+
+        activeUpdates.push({ title, content, expDateStr });
+    });
+
+    if (activeUpdates.length === 0) {
+        updatesContainer.innerHTML = '<div class="ticker-card">אין עדכונים חדשים</div>';
+        return;
+    }
+
+    let html = '';
+    activeUpdates.forEach(item => {
+        html += `
+            <div class="ticker-card">
+                <div class="card-title">${item.title}</div>
+                <div class="card-body">${item.content}</div>
+                ${item.expDateStr ? `<div class="card-date">תאריך: ${item.expDateStr}</div>` : ''}
+            </div>
+        `;
+    });
+
+    updatesContainer.innerHTML = html;
+}
+
+function parseDate(dateStr) {
+    if (!dateStr) return null;
+    const cleanStr = dateStr.toString().trim();
+    const parts = cleanStr.split(/[\/.-]/);
+    if (parts.length === 3) {
+        let day = parseInt(parts[0], 10);
+        let month = parseInt(parts[1], 10) - 1;
+        let year = parseInt(parts[2], 10);
+        if (year < 100) year += 2000;
+        const d = new Date(year, month, day);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+    return null;
 }
