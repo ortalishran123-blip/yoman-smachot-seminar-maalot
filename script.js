@@ -14,6 +14,7 @@ function loadMainEvents() {
     Papa.parse(MAIN_CSV_URL, {
         download: true,
         header: true,
+        skipEmptyLines: true,
         complete: (results) => {
             allEvents = results.data;
             renderMainEvents();
@@ -24,42 +25,60 @@ function loadMainEvents() {
 
 function renderMainEvents() {
     const listContainer = document.getElementById('events-list');
-    const searchVal = document.getElementById('search-input').value.toLowerCase();
+    const searchVal = (document.getElementById('search-input').value || '').toLowerCase().trim();
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const filtered = allEvents.filter(item => {
-        if (!item['שם הכלה'] && !item['סוג השמחה']) return false;
+        const hasContent = Object.values(item).some(val => val && val.trim() !== '');
+        if (!hasContent) return false;
 
-        // סינון לפי תאריך עתידי בלבד לרשימה הראשית
+        // סינון תאריך עתידי
         if (item['תאריך']) {
             const eventDate = parseDate(item['תאריך']);
             if (eventDate && eventDate < today) return false;
         }
 
-        // סינון לפי קטגוריות
+        // סינון קטגוריה
         const type = (item['סוג השמחה'] || '').trim();
         if (currentFilter === 'wedding' && type !== 'חתונה') return false;
         if (currentFilter === 'engagement' && type !== 'אירוסין') return false;
 
-        // סינון לפי חיפוש
-        const searchText = `${item['שם הכלה'] || ''} ${item['כיתה'] || ''} ${item['מסלול'] || ''} ${item['אולם'] || ''}`.toLowerCase();
-        return searchText.includes(searchVal);
+        // סינון חיפוש
+        if (searchVal !== '') {
+            const rowString = Object.values(item).join(' ').toLowerCase();
+            return rowString.includes(searchVal);
+        }
+
+        return true;
     });
 
     if (filtered.length === 0) {
-        listContainer.innerHTML = '<div style="text-align:center; padding:20px;">לא נמצאו שמחות תואמות</div>';
+        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות תואמות</div>';
         return;
     }
 
     let html = '';
     filtered.forEach(item => {
+        const name = item['שם הכלה'] || item['שם'] || 'שמחה מיוחדת';
+        const type = item['סוג השמחה'] || '';
+        const classGroup = item['כיתה'] || '';
+        const track = item['מסלול'] || '';
+        const date = item['תאריך'] || '';
+        const hall = item['אולם'] || '';
+
         html += `
             <div class="event-card">
-                <h3>${item['שם הכלה'] || ''} - ${item['סוג השמחה'] || ''}</h3>
-                <p><strong>כיתה/מסלול:</strong> ${item['כיתה'] || ''} ${item['מסלול'] || ''}</p>
-                <p><strong>תאריך:</strong> ${item['תאריך'] || ''}</p>
-                <p><strong>אולם:</strong> ${item['אולם'] || ''}</p>
+                <div class="card-header-row">
+                    <h3>${name}</h3>
+                    ${type ? `<span class="badge ${type === 'חתונה' ? 'badge-wedding' : 'badge-engagement'}">${type}</span>` : ''}
+                </div>
+                <div class="card-details">
+                    ${(classGroup || track) ? `<p><strong>כיתה/מסלול:</strong> ${classGroup} ${track}</p>` : ''}
+                    ${date ? `<p><strong>תאריך:</strong> ${date}</p>` : ''}
+                    ${hall ? `<p><strong>אולם:</strong> ${hall}</p>` : ''}
+                </div>
             </div>
         `;
     });
@@ -67,7 +86,10 @@ function renderMainEvents() {
 }
 
 function setupEventListeners() {
-    document.getElementById('search-input').addEventListener('input', renderMainEvents);
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', renderMainEvents);
+    }
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -123,6 +145,7 @@ function loadUpdatesTicker() {
     Papa.parse(UPDATES_CSV_URL, {
         download: true,
         header: false,
+        skipEmptyLines: true,
         complete: (results) => {
             const rows = results.data.slice(1);
             renderUpdatesTicker(rows);
