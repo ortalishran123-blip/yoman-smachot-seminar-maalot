@@ -17,13 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // פונקציה לטעינת הנתונים (מ-Google Sheets או קובץ מקומי)
 function fetchData() {
-    // כאן מוגדרת שליפת הנתונים שלך
-    // לצורך הדוגמה אנחנו מניחים שהנתונים נטענים למערך allEvents
     if (typeof gapi !== 'undefined' && gapi.client) {
-        // קריאה ל-Google Sheets API אם מוגדר אצלך
         loadGoogleSheetData();
     } else {
-        // נתונים לדוגמה או טעינה מקומית קיימת
         renderMainEvents();
     }
 }
@@ -38,10 +34,11 @@ function getRowValue(item, possibleKeys) {
     return '';
 }
 
-// פונקציה להמרת מחרוזת תאריך לאובייקט Date
+// פונקציה בטוחה להמרת תאריך בלי לגרום לקריסות
 function parseDate(dateStr) {
     if (!dateStr) return null;
-    // ניסיון פיצוח תאריך בפורמטים נפוצים (למשל DD/MM/YYYY או תאריכים בעברית/לועזיים)
+    
+    // ניסיון לזהות פורמט נפוץ כמו DD/MM/YYYY או YYYY-MM-DD
     let parts = dateStr.split(/[\/\-\.]/);
     if (parts.length === 3) {
         let day = parseInt(parts[0], 10);
@@ -51,20 +48,21 @@ function parseDate(dateStr) {
         let date = new Date(year, month, day);
         if (!isNaN(date.getTime())) return date;
     }
+    
     let parsed = new Date(dateStr);
-    return isNaN(parsed.getTime()) ? null : parsed;
+    if (!isNaN(parsed.getTime())) return parsed;
+
+    return null; // אם התאריך לא תקין (למשל תאריך עברי מחרוזתי), מחזיר null בבטחה
 }
 
-// פונקציה לע지ון מסננים (הכל, חתונות, אירוסין)
+// פונקציה לעדכון מסננים (הכל, חתונות, אירוסין)
 function setFilter(filterType) {
     currentFilter = filterType;
     
-    // עדכון כפתורים פעילים בעיצוב
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     
-    // סימון הכפתור הנבחר
     if (filterType === 'all') document.getElementById('filter-all')?.classList.add('active');
     if (filterType === 'wedding') document.getElementById('filter-wedding')?.classList.add('active');
     if (filterType === 'engagement') document.getElementById('filter-engagement')?.classList.add('active');
@@ -89,8 +87,9 @@ function renderMainEvents() {
         const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
         if (dateStr) {
             const eventDate = parseDate(dateStr);
+            // אם הצלחנו לפענח תאריך והוא עבר - נסנן אותו החוצה
             if (eventDate && eventDate.getTime() < today.getTime()) {
-                return false; // מסנן אירועים עבריים/לועזיים שעברו
+                return false; 
             }
         }
 
@@ -127,7 +126,7 @@ function renderMainEvents() {
         const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
         const hall = getRowValue(item, ['אולם']);
 
-        // חישוב הימים שנותרו לאירוע והצגת התגית המותאמת
+        // חישוב בטוח של הימים שנותרו
         let countdownBadgeHtml = '';
         if (dateStr) {
             const eventDate = parseDate(dateStr);
@@ -136,7 +135,7 @@ function renderMainEvents() {
                 const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
                 let countdownText = '';
-                let isUrgent = diffDays <= 7; // פחות או שבוע מעכשיו מקבל עיצוב בולט
+                let isUrgent = diffDays <= 7;
 
                 if (diffDays === 0) {
                     countdownText = 'היום!';
