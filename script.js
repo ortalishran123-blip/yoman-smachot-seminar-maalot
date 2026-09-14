@@ -78,10 +78,15 @@ function renderMainEvents() {
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         
-        // הגדרת קישורים לשירותי הניווט השונים
+        // הגדרת קישורים לשירותי הניווט
         const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
         const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
+
+        // אייקונים מקוריים בעיצוב SVG נקי
+        const moovitIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v4M6 20v2m12-2v2M5 11h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        const wazeIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#33ccff" style="vertical-align: middle;"><path d="M18.5 10.5C18.5 6.36 14.86 3 10.33 3S2.16 6.36 2.16 10.5c0 2.2 1.03 4.18 2.67 5.56L3.5 19l3.86-1.12c.92.27 1.9.42 2.97.42 4.53 0 8.17-3.36 8.17-7.58z" fill="#00bcd4"/><circle cx="7.5" cy="10" r="1.5" fill="#fff"/><circle cx="13.5" cy="10" r="1.5" fill="#fff"/></svg>`;
+        const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
 
         html += `
             <div class="event-row-item">
@@ -93,9 +98,9 @@ function renderMainEvents() {
                 <div class="event-details-inline">
                     ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
                     ${hall ? `<span><strong>אולם:</strong> ${hall} 
-                        <a href="${moovitUrl}" target="_blank" class="moovit-btn" title="דרכי הגעה במוביט">🚌 מוביט</a>
-                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="ניווט בוויז" style="margin-right: 5px;">🚗</a>
-                        <a href="${mapsUrl}" target="_blank" class="moovit-btn" title="ניווט במפות גוגל" style="margin-right: 5px;">🗺️ גוגל מפות</a>
+                        <a href="${moovitUrl}" target="_blank" class="moovit-btn" title="מוביט">${moovitIcon} מוביט</a>
+                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 4px 6px;">${wazeIcon}</a>
+                        <a href="${mapsUrl}" target="_blank" class="moovit-btn" title="גוגל מפות" style="margin-right: 5px;">${mapsIcon} מפות</a>
                     </span>` : ''}
                 </div>
             </div>
