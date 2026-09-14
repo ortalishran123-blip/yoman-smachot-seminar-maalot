@@ -1,4 +1,4 @@
-const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT4sD0e69J_cUX043g8x2Z809Y8jK2f-5H-7uJ1x-m5N5F3G1L-0y6V7-N/pub?output=csv';
+const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPfptrGvBLcBmgbVCLL2q10Mtn-imC-re1YTIuKSlj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv';
 const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
 
 let allEvents = [];
@@ -29,7 +29,6 @@ function renderMainEvents() {
 
     const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
     
-    // קביעת תאריך היום בחצות
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -37,8 +36,7 @@ function renderMainEvents() {
         const hasContent = Object.values(item).some(val => val && val.toString().trim() !== '');
         if (!hasContent) return false;
 
-        // בדיקת תאריך - הצגת אירועים מהיום והלאה בלבד
-        const dateStr = item['תאריך לועזי'] || item['תאריך'] || '';
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
         if (dateStr) {
             const eventDate = parseDate(dateStr);
             if (eventDate && eventDate.getTime() < today.getTime()) {
@@ -46,12 +44,10 @@ function renderMainEvents() {
             }
         }
 
-        // סינון לפי קטגוריה
-        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim();
         if (currentFilter === 'wedding' && !type.includes('חתונה')) return false;
         if (currentFilter === 'engagement' && !type.includes('אירוסין')) return false;
 
-        // חיפוש חופשי
         if (searchVal !== '') {
             const rowString = Object.values(item).join(' ').toLowerCase();
             return rowString.includes(searchVal);
@@ -67,12 +63,12 @@ function renderMainEvents() {
 
     let html = '';
     filtered.forEach(item => {
-        const name = item['שם הכלה'] || item['שם'] || 'אירוע';
-        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
-        const classGroup = item['כיתה'] || '';
-        const track = item['מסלול'] || '';
-        const date = item['תאריך לועזי'] || item['תאריך'] || '';
-        const hall = item['אולם'] || '';
+        const name = getRowValue(item, ['שם הכלה', 'שם', 'שם מלא']) || 'אירוע';
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim();
+        const classGroup = getRowValue(item, ['כיתה']);
+        const track = getRowValue(item, ['מסלול']);
+        const date = getRowValue(item, ['תאריך לועזי', 'תאריך']);
+        const hall = getRowValue(item, ['אולם']);
 
         html += `
             <div class="event-card">
@@ -90,6 +86,15 @@ function renderMainEvents() {
     });
 
     listContainer.innerHTML = html;
+}
+
+function getRowValue(row, possibleKeys) {
+    for (let key of possibleKeys) {
+        if (row[key] !== undefined && row[key] !== null) {
+            return row[key].toString();
+        }
+    }
+    return '';
 }
 
 function setupEventListeners() {
@@ -116,14 +121,14 @@ function renderPastEventsTicker(events) {
     today.setHours(0, 0, 0, 0);
 
     const pastEvents = events.filter(item => {
-        const dateStr = item['תאריך לועזי'] || item['תאריך'] || '';
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']);
         if (!dateStr) return false;
         
         const eventDate = parseDate(dateStr);
         if (!eventDate) return false;
 
         const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24));
-        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']).trim();
 
         if (type.includes('חתונה') && diffDays > 0 && diffDays <= 30) return true;
         if (type.includes('אירוסין') && diffDays > 0 && diffDays <= 10) return true;
@@ -138,12 +143,16 @@ function renderPastEventsTicker(events) {
 
     let html = '';
     pastEvents.forEach(item => {
-        const date = item['תאריך לועזי'] || item['תאריך'] || '';
-        const type = item['חתונה/ אירוסין'] || item['סוג השמחה'] || '';
+        const date = getRowValue(item, ['תאריך לועזי', 'תאריך']);
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']);
+        const name = getRowValue(item, ['שם הכלה', 'שם']);
+        const classGroup = getRowValue(item, ['כיתה']);
+        const hall = getRowValue(item, ['אולם']);
+
         html += `
             <div class="ticker-card past">
-                <div class="card-title">${item['שם הכלה'] || ''} - ${type}</div>
-                <div class="card-body">${item['כיתה'] || ''} | ${item['אולם'] || ''}</div>
+                <div class="card-title">${name} - ${type}</div>
+                <div class="card-body">${classGroup} | ${hall}</div>
                 <div class="card-date">${date}</div>
             </div>
         `;
