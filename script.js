@@ -81,6 +81,7 @@ function renderMainEvents() {
         const hall = getRowValue(item, ['אולם']);
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
+        const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement';
         
         const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
@@ -92,18 +93,19 @@ function renderMainEvents() {
 
         html += `
             <div class="event-row-item">
-                <div class="event-main-info">
-                    <h3>${name}</h3>
-                    ${classTrackText ? `<div class="event-class-track">${classTrackText}</div>` : ''}
-                    ${type ? `<span class="badge ${type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement'}">${type}</span>` : ''}
+                <div class="event-header-row">
+                    ${type ? `<span class="badge ${badgeClass}">${type}</span>` : ''}
+                    <h3 class="event-main-info">${name}</h3>
+                    ${classTrackText ? `<span class="event-divider">|</span><span class="event-class-track">${classTrackText}</span>` : ''}
                 </div>
-                <div class="event-details-inline">
-                    ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
-                    ${hall ? `<span><strong>אולם:</strong> ${hall} 
-                        <a href="${moovitUrl}" target="_blank" class="moovit-btn" title="מוביט">${moovitIcon} מוביט</a>
-                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 2px 4px; display: inline-flex; align-items: center;">${wazeIcon}</a>
-                        <a href="${mapsUrl}" target="_blank" class="moovit-btn" title="גוגל מפות" style="margin-right: 5px;">${mapsIcon} מפות</a>
-                    </span>` : ''}
+                <div class="event-date-row">
+                    תאריך: ${dateHebrew}
+                </div>
+                <div class="event-location-row">
+                    אולם: ${hall} 
+                    ${moovitUrl ? `<a href="${moovitUrl}" target="_blank" class="moovit-btn" title="מוביט">${moovitIcon} מוביט</a>` : ''}
+                    ${wazeUrl ? `<a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 2px 4px; display: inline-flex; align-items: center;">${wazeIcon}</a>` : ''}
+                    ${mapsUrl ? `<a href="${mapsUrl}" target="_blank" class="moovit-btn" title="גוגל מפות" style="margin-right: 5px;">${mapsIcon} מפות</a>` : ''}
                 </div>
             </div>
         `;
@@ -137,7 +139,6 @@ function setupEventListeners() {
     });
 }
 
-// חיבור אוטומטי של כפתורי הטפסים כדי שיפתחו את הקישורים בלחיצה
 function setupFormButtons() {
     document.querySelectorAll('button, a').forEach(el => {
         const text = el.textContent || '';
