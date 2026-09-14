@@ -1,4 +1,4 @@
-const MAIN_CSV_URL = 'הכנס_כאן_את_הקישור_ל-CSV_הראשי';
+const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT4sD0e69J_cUX043g8x2Z809Y8jK2f-5H-7uJ1x-m5N5F3G1L-0y6V7-N/pub?output=csv';
 const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
 
 document.addEventListener('DOMContentLoaded', () => {
