@@ -27,7 +27,7 @@ function renderMainEvents() {
     const listContainer = document.getElementById('events-list');
     const searchVal = (document.getElementById('search-input').value || '').toLowerCase().trim();
     
-    // הגדרת תאריך ראשית היום ללא שעות
+    // נקודת ייחוס: תחילת היום הנוכחי (חצות)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -35,17 +35,16 @@ function renderMainEvents() {
         const hasContent = Object.values(item).some(val => val && val.toString().trim() !== '');
         if (!hasContent) return false;
 
-        // שליפת התאריך לפי העמודות באקסל
+        // בדיקת תאריך - הצגת אירועים מהיום והלאה בלבד
         const dateStr = item['תאריך לועזי'] || item['תאריך'] || '';
         if (dateStr) {
             const eventDate = parseDate(dateStr);
-            // מציג אירועים מהיום והלאה בלבד
             if (eventDate && eventDate.getTime() < today.getTime()) {
-                return false;
+                return false; // סינון אירועים שעברו
             }
         }
 
-        // שליפת סוג האירוע
+        // סינון לפי קטגוריה
         const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
         if (currentFilter === 'wedding' && !type.includes('חתונה')) return false;
         if (currentFilter === 'engagement' && !type.includes('אירוסין')) return false;
@@ -205,6 +204,7 @@ function renderUpdatesTicker(rows) {
     updatesContainer.innerHTML = html + html;
 }
 
+// פונקציית המרת תאריך עמידה
 function parseDate(dateStr) {
     if (!dateStr) return null;
     const cleanStr = dateStr.toString().trim();
