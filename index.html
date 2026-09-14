@@ -11,37 +11,64 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header class="main-header">
-            <h1>יומן שמחות סמינר מעלות</h1>
-            <p class="subtitle">מאגר השמחות המרכזי והעדכני של חתונות, אירוסין ואירועים בסמינר מעלות</p>
-            
-            <div class="add-event-container">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform" target="_blank" class="add-event-btn">
-                    <span class="btn-icon">✨</span>
-                    <span>הוספת שמחה חדשה</span>
+    <div class="layout-wrapper">
+        
+        <!-- סרגל ימין: עדכונים מיוחדים -->
+        <aside class="sidebar sidebar-right">
+            <div class="sidebar-header">
+                <h3>📢 עדכונים מיוחדים</h3>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdkYAUSIoFMBtpxSyiMzAp8fSZlY2LQLbHHLHKDy1A2v_PinA/viewform" target="_blank" class="add-update-btn">
+                    + הוספת עדכון
                 </a>
             </div>
-        </header>
-        
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="חיפוש לפי כלה, כיתה, מסלול, אולם...">
-        </div>
+            <div class="ticker-container">
+                <div id="updates-ticker" class="ticker-content"></div>
+            </div>
+        </aside>
 
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">הכל</button>
-            <button class="filter-btn" data-filter="wedding">חתונות</button>
-            <button class="filter-btn" data-filter="engagement">אירוסין</button>
-        </div>
+        <!-- התוכן המרכזי -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1>יומן שמחות סמינר מעלות</h1>
+                <p class="subtitle">מאגר השמחות המרכזי והעדכני של חתונות, אירוסין ואירועים בסמינר מעלות</p>
+                
+                <div class="add-event-container">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform" target="_blank" class="add-event-btn">
+                        <span class="btn-icon">✨</span>
+                        <span>הוספת שמחה חדשה</span>
+                    </a>
+                </div>
+            </header>
+            
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="חיפוש לפי כלה, כיתה, מסלול, אולם...">
+            </div>
 
-        <div id="events-list" class="events-list"></div>
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">הכל</button>
+                <button class="filter-btn" data-filter="wedding">חתונות</button>
+                <button class="filter-btn" data-filter="engagement">אירוסין</button>
+            </div>
 
-        <!-- תוספת טקסט חשובה עבור SEO ואינדוקס בגוגל -->
-        <section class="about-section" style="margin-top: 40px; line-height: 1.6;">
-            <h2>אודות יומן השמחות של סמינר מעלות</h2>
-            <p>ברוכים הבאים לפורטל השמחות והאירועים הבלעדי. המערכת נועדה לרכז עבור תלמידות, בוגרות ומשפחות את כל המידע העדכני ביותר לגבי מועדי אירוסין, חתונות ואירועים משמחים.</p>
-            <p>באמצעות המערכת תוכלו לחפש בקלות אירועים לפי שם, כיתה, מסלול לימודים או מיקום האולם, וכן לעדכן שמחות חדשות בצורה מהירה ופשוטה.</p>
-        </section>
+            <div id="events-list" class="events-list"></div>
+
+            <section class="about-section" style="margin-top: 40px; line-height: 1.6;">
+                <h2>אודות יומן השמחות של סמינר מעלות</h2>
+                <p>ברוכים הבאים לפורטל השמחות והאירועים הבלעדי. המערכת נועדה לרכז עבור תלמידות, בוגרות ומשפחות את כל המידע העדכני ביותר לגבי מועדי אירוסין, חתונות ואירועים משמחים.</p>
+                <p>באמצעות המערכת תוכלו לחפש בקלות אירועים לפי שם, כיתה, מסלול לימודים או מיקום האולם, וכן לעדכן שמחות חדשות בצורה מהירה ופשוטה.</p>
+            </section>
+        </main>
+
+        <!-- סרגל שמאל: ארכיון שמחות שהיו -->
+        <aside class="sidebar sidebar-left">
+            <div class="sidebar-header">
+                <h3>📜 מזל טוב! (אירועים שהיו)</h3>
+            </div>
+            <div class="ticker-container">
+                <div id="past-events-ticker" class="ticker-content"></div>
+            </div>
+        </aside>
+
     </div>
 
     <script src="script.js"></script>
