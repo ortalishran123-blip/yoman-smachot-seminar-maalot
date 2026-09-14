@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>יומן שמחות סמינר מעלות</title>
     <link rel="stylesheet" href="style.css?v=11.0">
-    <!-- PapaParse לטעינת קובצי CSV -->
+    <!-- PapaParse לקריאת קבצי CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
 <body>
 
     <div class="main-layout">
 
-        <!-- סרגל צד ימין: אירועים שהיו לאחרונה -->
+        <!-- סיידבר ימני: אירועים שהיו לאחרונה -->
         <aside class="sidebar sidebar-right">
             <div class="sidebar-header">
                 <h2>📜 מזל טוב! (אירועים שהיו)</h2>
             </div>
             <div id="past-events-ticker" class="ticker-container">
-                <!-- יוטען דינמית באמצעות JS -->
+                <!-- כאן יופיעו האירועים שהיו -->
             </div>
         </aside>
 
@@ -27,7 +27,7 @@
             <header class="page-header">
                 <h1>יומן שמחות סמינר מעלות</h1>
                 <p class="subtitle">מאגר השמחות המרכזי והעדכני</p>
-                <button class="btn-add-event" onclick="window.open('YOUR_GOOGLE_FORM_URL', '_blank')">
+                <button class="btn-add-event" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform', '_blank')">
                     ✨ הוספת שמחה חדשה
                 </button>
             </header>
@@ -46,33 +46,31 @@
 
             <!-- רשימת האירועים העתידיים -->
             <section id="events-list" class="events-grid">
-                <!-- יוטען דינמית באמצעות JS -->
+                <!-- כאן יטענו האירועים מהקוד -->
             </section>
 
-            <!-- אזור מידע תחתון -->
+            <!-- אודות / מידע תחתון -->
             <section class="about-section">
-                <h2>אודות יומן השמחות</h2>
-                <p>
-                    ברוכים הבאים לפורטל השמחות והאירועים. המערכת נועדה לרכז עבורכן את כל המידע העדכני ביותר לגבי מועדי אירוסין, חתונות ואירועים משמחים.
-                </p>
+                <h2>אודות היומן</h2>
+                <p>ברוכים הבאים למאגר השמחות והעדכונים. המערכת נועדה לשתף אתכם כל שמחה של חברי וחברות צוות או בוגרות הסמינר, חתונות ואירוסין בשעה טובה.</p>
             </section>
         </main>
 
-        <!-- סרגל צד שמאל: עדכונים מיוחדים -->
+        <!-- סיידבר שמאלי: עדכונים מיוחדים -->
         <aside class="sidebar sidebar-left">
             <div class="sidebar-header">
                 <h2>📢 אירועים / עדכונים מיוחדים</h2>
-                <button class="btn-add-update" onclick="window.open('YOUR_UPDATE_FORM_URL', '_blank')">
+                <button class="btn-add-update" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkYAUSIoFMBtpxSyiMzAp8fSZlY2LQLbHHLHKDy1A2v_PinA/viewform?usp=dialog', '_blank')">
                     + הוספת עדכון
                 </button>
             </div>
             <div id="updates-ticker" class="ticker-container">
-                <!-- יוטען דינמית באמצעות JS -->
+                <!-- כאן יופיעו העדכונים -->
             </div>
         </aside>
 
     </div>
 
-    <script src="script.js?v=11.0"></script>
+    <script src="script.js?v=11.4"></script>
 </body>
 </html>
