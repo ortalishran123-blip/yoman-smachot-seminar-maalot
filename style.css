@@ -151,7 +151,7 @@ body {
     color: #ffffff;
 }
 
-/* עיצוב שורת האירוע והפרטים המובנים */
+/* עיצוב רשימת האירועים */
 .events-grid {
     display: flex;
     flex-direction: column;
@@ -213,20 +213,23 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.moovit-link {
+.moovit-btn {
     color: var(--primary);
+    background: #eff6ff;
     text-decoration: none;
     font-weight: 600;
     margin-right: 6px;
     font-size: 0.8rem;
-    background: #eff6ff;
-    padding: 2px 6px;
+    padding: 2px 8px;
     border-radius: 4px;
     border: 1px solid #bfdbfe;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background-color 0.2s ease;
 }
 
-.moovit-link:hover {
+.moovit-btn:hover {
     background: #dbeafe;
 }
 
