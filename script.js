@@ -1,6 +1,9 @@
 const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv';
 const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
 
+const EVENT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform';
+const UPDATE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdkYAUSIoFMBtpxSyiMzAp8fSZlY2LQLbHHLHKDy1A2v_PinA/viewform?usp=dialog';
+
 let allEvents = [];
 let currentFilter = 'all';
 
@@ -8,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMainEvents();
     loadUpdatesTicker();
     setupEventListeners();
+    setupFormButtons();
 });
 
 function loadMainEvents() {
@@ -78,12 +82,10 @@ function renderMainEvents() {
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         
-        // הגדרת קישורים לשירותי הניווט
         const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
         const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
 
-        // אייקונים
         const moovitIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v4M6 20v2m12-2v2M5 11h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
         const wazeIcon = `<svg width="22" height="22" viewBox="0 0 512 512" style="vertical-align: middle;"><circle cx="256" cy="256" r="256" fill="#33ccff"/><path d="M120 230 C120 140, 190 90, 275 90 C360 90, 420 150, 420 235 C420 320, 360 380, 275 380 C245 380, 215 370, 190 355 L130 375 L145 320 C128 295, 120 265, 120 230 Z" fill="#ffffff"/><circle cx="195" cy="400" r="32" fill="#1a1c28"/><circle cx="340" cy="380" r="32" fill="#1a1c28"/><circle cx="230" cy="210" r="16" fill="#1a1c28"/><circle cx="320" cy="210" r="16" fill="#1a1c28"/><path d="M 235 255 Q 275 290 315 255" stroke="#1a1c28" stroke-width="12" stroke-linecap="round" fill="none"/></svg>`;
         const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
@@ -132,6 +134,25 @@ function setupEventListeners() {
             currentFilter = e.currentTarget.getAttribute('data-filter');
             renderMainEvents();
         });
+    });
+}
+
+// חיבור אוטומטי של כפתורי הטפסים כדי שיפתחו את הקישורים בלחיצה
+function setupFormButtons() {
+    document.querySelectorAll('button, a').forEach(el => {
+        const text = el.textContent || '';
+        if (text.includes('הוספת שמחה חדשה')) {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(EVENT_FORM_URL, '_blank');
+            });
+        }
+        if (text.includes('הוספת עדכון')) {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(UPDATE_FORM_URL, '_blank');
+            });
+        }
     });
 }
 
