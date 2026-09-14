@@ -1,4 +1,4 @@
-/* הגדרות בסיס ופריסה מלאה לכל הדף */
+/* הגדרות בסיס ורקע לכל הדף */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,7 +9,7 @@
 html, body {
     width: 100%;
     min-height: 100vh;
-    background-color: #fdfbf7; /* רקע שמנת נעים וחם לכל הדף */
+    background-color: #f5f2eb; /* רקע שמפניה חמים ויוקרתי לכל הדף */
 }
 
 body {
@@ -33,20 +33,20 @@ body {
     width: 280px;
     min-width: 280px;
     background: #ffffff;
-    border: 1px solid #f0eae1;
+    border: 1px solid #e7e2d8;
     border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 /* אזור מרכזי */
 .content-center {
     flex-grow: 1;
     background: #ffffff;
-    border: 1px solid #f0eae1;
+    border: 1px solid #e7e2d8;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 /* כותרת ראשית */
@@ -68,7 +68,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* כפתור הוספת שמחה - עדין ואלגנטי בגווני שמפניה-זהב רך */
+/* כפתור הוספת שמחה - עדין ואלגנטי */
 .btn-add-event {
     background: #fbf7f0;
     color: #92400e;
@@ -85,10 +85,12 @@ body {
     background: #fef3c7;
 }
 
-/* כפתור הוספת עדכון בסיידבר */
+/* כפתור הוספת עדכון בסיידבר - ממוקד וממורכז באמצע התיבה */
 .sidebar-header {
     display: flex;
     flex-direction: column;
+    align-items: center; /* ממורכז לאמצע */
+    text-align: center;
     gap: 10px;
     margin-bottom: 15px;
 }
@@ -102,12 +104,13 @@ body {
     background: #fbf7f0;
     color: #57534e;
     border: 1px solid #e7e5e4;
-    padding: 6px 12px;
+    padding: 6px 16px;
     font-size: 13px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
-    width: fit-content;
+    display: block;
+    margin: 0 auto; /* מרכוז מלא בתוך התיבה */
 }
 
 .btn-add-update:hover {
@@ -186,33 +189,34 @@ body {
     background: #d97706;
 }
 
-/* עיצוב שורות אירועים */
+/* עיצוב שורות אירועים מחדש לפי החלוקה החדשה */
 .event-row-item {
     background: #fafaf9;
-    border: 1px solid #f0eae1;
-    border-radius: 8px;
+    border: 1px solid #eedfc4;
+    border-radius: 10px;
     padding: 15px;
     margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* מרווח נקי בין השורות */
 }
 
-.event-main-info h3 {
-    font-size: 18px;
-    color: #1c1917;
-    margin-bottom: 4px;
-}
-
-.event-class-track {
-    font-size: 13px;
-    color: #78716c;
-    margin-bottom: 6px;
+/* שורה ראשונה: סטטוס, שם, קו עומד, כיתה ומסלול */
+.event-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .badge {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 3px 10px;
     font-size: 12px;
     border-radius: 4px;
     font-weight: bold;
+    order: 1; /* מופיע משמאל */
 }
 
 .badge-wedding {
@@ -225,13 +229,40 @@ body {
     color: #2563eb;
 }
 
-.event-details-inline {
-    margin-top: 10px;
+.event-main-info h3 {
+    font-size: 18px;
+    color: #1c1917;
+    font-weight: 700;
+    order: 2;
+}
+
+.event-divider {
+    color: #d1c7b7;
+    font-weight: 300;
+    order: 3;
+}
+
+.event-class-track {
+    font-size: 13px;
+    color: #78716c;
+    order: 4;
+}
+
+/* שורה שנייה (הירוק): תאריך */
+.event-date-row {
+    font-size: 14px;
+    color: #44403c;
+    font-weight: 600;
+}
+
+/* שורה שלישית (הצהוב): מיקום אולם וכפתורי ניווט */
+.event-location-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 14px;
     color: #57534e;
-    display: flex;
     flex-wrap: wrap;
-    gap: 15px;
 }
 
 /* כפתורי ניווט */
@@ -239,13 +270,12 @@ body {
     display: inline-flex;
     align-items: center;
     background: #ffffff;
-    border: 1px solid #e7e5e4;
+    border: 1px solid #d7d3d0;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 12px;
     color: #44403c;
     text-decoration: none;
-    margin-right: 4px;
 }
 
 .moovit-btn:hover {
