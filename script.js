@@ -83,9 +83,11 @@ function renderMainEvents() {
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
         const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
 
-        // אייקונים מקוריים בעיצוב SVG נקי
+        // אייקונים בעיצוב מדויק (כולל סמל הוויז המדויק עם רקע תכלת וגלגלים)
         const moovitIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v4M6 20v2m12-2v2M5 11h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-        const wazeIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#33ccff" style="vertical-align: middle;"><path d="M18.5 10.5C18.5 6.36 14.86 3 10.33 3S2.16 6.36 2.16 10.5c0 2.2 1.03 4.18 2.67 5.56L3.5 19l3.86-1.12c.92.27 1.9.42 2.97.42 4.53 0 8.17-3.36 8.17-7.58z" fill="#00bcd4"/><circle cx="7.5" cy="10" r="1.5" fill="#fff"/><circle cx="13.5" cy="10" r="1.5" fill="#fff"/></svg>`;
+        
+        const wazeIcon = `<svg width="22" height="22" viewBox="0 0 512 512" style="vertical-align: middle;"><rect width="512" height="512" rx="100" fill="#33ccff"/><path d="M380 230c0-65.5-53.5-119-119-119s-119 53.5-119 119c0 31.4 12.1 60 31.9 81.3L150 370l62.2-18.1c20.3 11 43.8 17.1 68.8 17.1 65.5 0 119-53.5 119-119z" fill="#ffffff"/><circle cx="210" cy="225" r="18" fill="#1b1e2b"/><circle cx="302" cy="225" r="18" fill="#1b1e2b"/><path d="M210 270c20 15 72 15 92 0" stroke="#1b1e2b" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="195" cy="370" r="30" fill="#1b1e2b"/><circle cx="325" cy="370" r="30" fill="#1b1e2b"/></svg>`;
+        
         const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
 
         html += `
@@ -99,7 +101,7 @@ function renderMainEvents() {
                     ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
                     ${hall ? `<span><strong>אולם:</strong> ${hall} 
                         <a href="${moovitUrl}" target="_blank" class="moovit-btn" title="מוביט">${moovitIcon} מוביט</a>
-                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 4px 6px;">${wazeIcon}</a>
+                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 2px 4px; display: inline-flex; align-items: center;">${wazeIcon}</a>
                         <a href="${mapsUrl}" target="_blank" class="moovit-btn" title="גוגל מפות" style="margin-right: 5px;">${mapsIcon} מפות</a>
                     </span>` : ''}
                 </div>
