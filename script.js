@@ -78,8 +78,8 @@ function renderMainEvents() {
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         
-        // תיקון כתובת הקישור למוביט כך שתכוון ישירות אל האולם הספציפי
-        const moovitUrl = hall ? `https://moovitapp.com/index/he/תחבורה_ציבורית-${encodeURIComponent(hall)}` : '';
+        // החזרת כתובת החיפוש התקינה והיציבה של מוביט
+        const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
 
         html += `
             <div class="event-row-item">
