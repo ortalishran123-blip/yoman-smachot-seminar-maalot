@@ -57,7 +57,13 @@ function renderMainEvents() {
     });
 
     if (filtered.length === 0) {
-        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
+        if (currentFilter === 'engagement') {
+            listContainer.innerHTML = '<div class="no-results">אין אירוסין בקרוב</div>';
+        } else if (currentFilter === 'wedding') {
+            listContainer.innerHTML = '<div class="no-results">אין חתונות בקרוב</div>';
+        } else {
+            listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
+        }
         return;
     }
 
@@ -67,19 +73,19 @@ function renderMainEvents() {
         const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim();
         const classGroup = getRowValue(item, ['כיתה']);
         const track = getRowValue(item, ['מסלול']);
-        const date = getRowValue(item, ['תאריך לועזי', 'תאריך']);
+        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']);
         const hall = getRowValue(item, ['אולם']);
 
         html += `
-            <div class="event-card">
-                <div class="card-header-row">
+            <div class="event-row-item">
+                <div class="event-main-info">
                     <h3>${name}</h3>
                     ${type ? `<span class="badge ${type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement'}">${type}</span>` : ''}
                 </div>
-                <div class="card-details">
-                    ${(classGroup || track) ? `<p><strong>כיתה/מסלול:</strong> ${classGroup} ${track}</p>` : ''}
-                    ${date ? `<p><strong>תאריך:</strong> ${date}</p>` : ''}
-                    ${hall ? `<p><strong>אולם:</strong> ${hall}</p>` : ''}
+                <div class="event-details-inline">
+                    ${(classGroup || track) ? `<span><strong>כיתה/מסלול:</strong> ${classGroup} ${track}</span>` : ''}
+                    ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
+                    ${hall ? `<span><strong>אולם:</strong> ${hall}</span>` : ''}
                 </div>
             </div>
         `;
@@ -143,7 +149,7 @@ function renderPastEventsTicker(events) {
 
     let html = '';
     pastEvents.forEach(item => {
-        const date = getRowValue(item, ['תאריך לועזי', 'תאריך']);
+        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']);
         const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']);
         const name = getRowValue(item, ['שם הכלה', 'שם']);
         const classGroup = getRowValue(item, ['כיתה']);
@@ -153,12 +159,12 @@ function renderPastEventsTicker(events) {
             <div class="ticker-card past">
                 <div class="card-title">${name} - ${type}</div>
                 <div class="card-body">${classGroup} | ${hall}</div>
-                <div class="card-date">${date}</div>
+                <div class="card-date">${dateHebrew}</div>
             </div>
         `;
     });
 
-    pastContainer.innerHTML = html + html;
+    pastContainer.innerHTML = html;
 }
 
 function loadUpdatesTicker() {
@@ -208,12 +214,12 @@ function renderUpdatesTicker(rows) {
             <div class="ticker-card">
                 <div class="card-title">${item.title}</div>
                 <div class="card-body">${item.content}</div>
-                ${item.expDateStr ? `<div class="card-date">בתוקף עד: ${item.expDateStr}</div>` : ''}
+                ${item.expDateStr ? `<div class="card-date">תאריך: ${item.expDateStr}</div>` : ''}
             </div>
         `;
     });
 
-    updatesContainer.innerHTML = html + html;
+    updatesContainer.innerHTML = html;
 }
 
 function parseDate(dateStr) {
