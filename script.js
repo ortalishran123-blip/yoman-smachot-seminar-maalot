@@ -27,22 +27,26 @@ function renderMainEvents() {
     const listContainer = document.getElementById('events-list');
     const searchVal = (document.getElementById('search-input').value || '').toLowerCase().trim();
     
+    // הגדרת תאריך ראשית היום ללא שעות
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const filtered = allEvents.filter(item => {
-        const hasContent = Object.values(item).some(val => val && val.trim() !== '');
+        const hasContent = Object.values(item).some(val => val && val.toString().trim() !== '');
         if (!hasContent) return false;
 
-        // זיהוי התאריך לפי העמודה המדויקת מהאקסל ("תאריך לועזי" או "תאריך")
+        // שליפת התאריך לפי העמודות באקסל
         const dateStr = item['תאריך לועזי'] || item['תאריך'] || '';
         if (dateStr) {
             const eventDate = parseDate(dateStr);
-            if (eventDate && eventDate < today) return false;
+            // מציג אירועים מהיום והלאה בלבד
+            if (eventDate && eventDate.getTime() < today.getTime()) {
+                return false;
+            }
         }
 
-        // זיהוי סוג השמחה לפי העמודה המדויקת ("חתונה/ אירוסין" או "סוג השמחה")
-        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').trim();
+        // שליפת סוג האירוע
+        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
         if (currentFilter === 'wedding' && !type.includes('חתונה')) return false;
         if (currentFilter === 'engagement' && !type.includes('אירוסין')) return false;
 
@@ -62,8 +66,8 @@ function renderMainEvents() {
 
     let html = '';
     filtered.forEach(item => {
-        const name = item['שם הכלה'] || item['שם'] || 'שמחה מיוחדת';
-        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').trim();
+        const name = item['שם הכלה'] || item['שם'] || 'אירוע';
+        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
         const classGroup = item['כיתה'] || '';
         const track = item['מסלול'] || '';
         const date = item['תאריך לועזי'] || item['תאריך'] || '';
@@ -117,7 +121,7 @@ function renderPastEventsTicker(events) {
         if (!eventDate) return false;
 
         const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24));
-        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').trim();
+        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').toString().trim();
 
         if (type.includes('חתונה') && diffDays > 0 && diffDays <= 30) return true;
         if (type.includes('אירוסין') && diffDays > 0 && diffDays <= 10) return true;
@@ -168,9 +172,9 @@ function renderUpdatesTicker(rows) {
     const activeUpdates = [];
 
     rows.forEach(row => {
-        const title = row[1] ? row[1].trim() : '';
-        const content = row[2] ? row[2].trim() : '';
-        const expDateStr = row[3] ? row[3].trim() : '';
+        const title = row[1] ? row[1].toString().trim() : '';
+        const content = row[2] ? row[2].toString().trim() : '';
+        const expDateStr = row[3] ? row[3].toString().trim() : '';
 
         if (!title && !content) return;
 
@@ -203,13 +207,16 @@ function renderUpdatesTicker(rows) {
 
 function parseDate(dateStr) {
     if (!dateStr) return null;
-    const parts = dateStr.split(/[\/.-]/);
+    const cleanStr = dateStr.toString().trim();
+    const parts = cleanStr.split(/[\/.-]/);
     if (parts.length === 3) {
         let day = parseInt(parts[0], 10);
         let month = parseInt(parts[1], 10) - 1;
         let year = parseInt(parts[2], 10);
         if (year < 100) year += 2000;
-        return new Date(year, month, day);
+        const d = new Date(year, month, day);
+        d.setHours(0, 0, 0, 0);
+        return d;
     }
     return null;
 }
