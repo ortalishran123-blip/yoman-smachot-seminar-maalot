@@ -118,7 +118,7 @@ body {
     background: #f5f5f4;
 }
 
-/* תיבת עדכונים עם גובה קבוע וגלילה פנימית */
+/* תיבת עדכונים עם גובה קבוע וגלילה פנימית (הגודל שביקשת בשמאל) */
 #updates-ticker {
     max-height: 400px;
     overflow-y: auto;
@@ -204,7 +204,7 @@ body {
     padding-left: 5px;
 }
 
-/* עיצוב כרטיסי השמחות (3 שורות ברורות) */
+/* עיצוב כרטיסי השמחות במרכז - שומר על המבנה המקורי אבל ממורכז לאמצע המסגרת */
 .event-row-item {
     background: #ffffff;
     border: 1px solid #dcd3c0;
@@ -213,6 +213,8 @@ body {
     margin-bottom: 14px;
     display: flex;
     flex-direction: column;
+    align-items: center; /* מרכוז התוכן לאמצע המסגרת */
+    text-align: center;  /* יישור הטקסט לאמצע */
     gap: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
@@ -221,9 +223,10 @@ body {
 .event-header-row {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center; /* מרכוז אופקי לאמצע */
     gap: 10px;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .badge {
@@ -261,21 +264,25 @@ body {
     color: #78716c;
 }
 
-/* שורה שנייה: תאריך האירוע (בירוק) */
+/* שורה שנייה: תאריך האירוע (בירוק וממורכז) */
 .event-date-row {
     font-size: 14px;
     color: #15803d;
     font-weight: 600;
+    width: 100%;
+    text-align: center;
 }
 
 /* שורה שלישית: אולם וכפתורי ניווט */
 .event-location-row {
     display: flex;
     align-items: center;
+    justify-content: center; /* מרכוז אופקי לאמצע */
     gap: 10px;
     font-size: 14px;
     color: #57534e;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 /* כפתורי ניווט */
