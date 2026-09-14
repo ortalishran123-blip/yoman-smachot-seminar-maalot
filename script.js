@@ -34,18 +34,19 @@ function renderMainEvents() {
         const hasContent = Object.values(item).some(val => val && val.trim() !== '');
         if (!hasContent) return false;
 
-        // סינון תאריך עתידי
-        if (item['תאריך']) {
-            const eventDate = parseDate(item['תאריך']);
+        // זיהוי התאריך לפי העמודה המדויקת מהאקסל ("תאריך לועזי" או "תאריך")
+        const dateStr = item['תאריך לועזי'] || item['תאריך'] || '';
+        if (dateStr) {
+            const eventDate = parseDate(dateStr);
             if (eventDate && eventDate < today) return false;
         }
 
-        // סינון קטגוריה
-        const type = (item['סוג השמחה'] || '').trim();
-        if (currentFilter === 'wedding' && type !== 'חתונה') return false;
-        if (currentFilter === 'engagement' && type !== 'אירוסין') return false;
+        // זיהוי סוג השמחה לפי העמודה המדויקת ("חתונה/ אירוסין" או "סוג השמחה")
+        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').trim();
+        if (currentFilter === 'wedding' && !type.includes('חתונה')) return false;
+        if (currentFilter === 'engagement' && !type.includes('אירוסין')) return false;
 
-        // סינון חיפוש
+        // חיפוש חופשי
         if (searchVal !== '') {
             const rowString = Object.values(item).join(' ').toLowerCase();
             return rowString.includes(searchVal);
@@ -55,24 +56,24 @@ function renderMainEvents() {
     });
 
     if (filtered.length === 0) {
-        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות תואמות</div>';
+        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
         return;
     }
 
     let html = '';
     filtered.forEach(item => {
         const name = item['שם הכלה'] || item['שם'] || 'שמחה מיוחדת';
-        const type = item['סוג השמחה'] || '';
+        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').trim();
         const classGroup = item['כיתה'] || '';
         const track = item['מסלול'] || '';
-        const date = item['תאריך'] || '';
+        const date = item['תאריך לועזי'] || item['תאריך'] || '';
         const hall = item['אולם'] || '';
 
         html += `
             <div class="event-card">
                 <div class="card-header-row">
                     <h3>${name}</h3>
-                    ${type ? `<span class="badge ${type === 'חתונה' ? 'badge-wedding' : 'badge-engagement'}">${type}</span>` : ''}
+                    ${type ? `<span class="badge ${type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement'}">${type}</span>` : ''}
                 </div>
                 <div class="card-details">
                     ${(classGroup || track) ? `<p><strong>כיתה/מסלול:</strong> ${classGroup} ${track}</p>` : ''}
@@ -109,15 +110,17 @@ function renderPastEventsTicker(events) {
     today.setHours(0, 0, 0, 0);
 
     const pastEvents = events.filter(item => {
-        if (!item['תאריך']) return false;
-        const eventDate = parseDate(item['תאריך']);
+        const dateStr = item['תאריך לועזי'] || item['תאריך'] || '';
+        if (!dateStr) return false;
+        
+        const eventDate = parseDate(dateStr);
         if (!eventDate) return false;
 
         const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24));
-        const type = (item['סוג השמחה'] || '').trim();
+        const type = (item['חתונה/ אירוסין'] || item['סוג השמחה'] || '').trim();
 
-        if (type === 'חתונה' && diffDays > 0 && diffDays <= 30) return true;
-        if (type === 'אירוסין' && diffDays > 0 && diffDays <= 10) return true;
+        if (type.includes('חתונה') && diffDays > 0 && diffDays <= 30) return true;
+        if (type.includes('אירוסין') && diffDays > 0 && diffDays <= 10) return true;
 
         return false;
     });
@@ -129,11 +132,13 @@ function renderPastEventsTicker(events) {
 
     let html = '';
     pastEvents.forEach(item => {
+        const date = item['תאריך לועזי'] || item['תאריך'] || '';
+        const type = item['חתונה/ אירוסין'] || item['סוג השמחה'] || '';
         html += `
             <div class="ticker-card past">
-                <div class="card-title">${item['שם הכלה'] || ''} - ${item['סוג השמחה'] || ''}</div>
+                <div class="card-title">${item['שם הכלה'] || ''} - ${type}</div>
                 <div class="card-body">${item['כיתה'] || ''} | ${item['אולם'] || ''}</div>
-                <div class="card-date">${item['תאריך'] || ''}</div>
+                <div class="card-date">${date}</div>
             </div>
         `;
     });
