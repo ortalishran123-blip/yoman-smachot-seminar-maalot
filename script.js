@@ -77,7 +77,9 @@ function renderMainEvents() {
         const hall = getRowValue(item, ['אולם']);
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
-        const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
+        
+        // תיקון כתובת הקישור למוביט כך שתכוון ישירות אל האולם הספציפי
+        const moovitUrl = hall ? `https://moovitapp.com/index/he/תחבורה_ציבורית-${encodeURIComponent(hall)}` : '';
 
         html += `
             <div class="event-row-item">
