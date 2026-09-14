@@ -1,136 +1,200 @@
-/* הגדרות בסיס */
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-    color: #333;
+* {
+    box-sizing: border-box;
 }
 
-/* פריסת העמודות הראשית */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 0;
+    color: #1e293b;
+}
+
 .layout-wrapper {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    max-width: 1400px;
+    align-items: flex-start;
+    gap: 25px;
+    max-width: 1380px;
     margin: 0 auto;
-    padding: 20px 10px;
+    padding: 30px 15px;
 }
 
+/* התוכן המרכזי */
 .main-content {
     flex: 1;
-    max-width: 800px;
+    max-width: 780px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
 }
 
-/* עיצוב החלק המרכזי */
 .main-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .main-header h1 {
-    font-size: 2rem;
-    color: #1a252f;
-    margin-bottom: 8px;
+    font-size: 2.2rem;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+    font-weight: 800;
 }
 
 .subtitle {
-    color: #6c757d;
+    color: #64748b;
     font-size: 1rem;
-    margin-bottom: 15px;
-}
-
-.add-event-container {
-    margin: 15px 0;
+    margin: 0 0 20px 0;
 }
 
 .add-event-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 25px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    padding: 12px 26px;
+    border-radius: 50px;
     text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,123,255,0.3);
-    transition: transform 0.2s, background-color 0.2s;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+    transition: all 0.2s ease;
 }
 
 .add-event-btn:hover {
-    background-color: #0056b3;
     transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
 }
 
-/* שורת חיפוש וכפתורי סינון */
-.search-bar {
+/* חיפוש וסינון */
+.search-bar input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #f8fafc;
+    outline: none;
+    transition: all 0.2s ease;
     margin-bottom: 15px;
 }
 
-.search-bar input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    font-size: 1rem;
-    box-sizing: border-box;
+.search-bar input:focus {
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 .filters {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .filter-btn {
     flex: 1;
-    padding: 8px 16px;
-    border: 1px solid #007bff;
-    background: white;
-    color: #007bff;
-    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.filter-btn.active, .filter-btn:hover {
-    background: #007bff;
-    color: white;
+.filter-btn.active {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
-/* רשימת אירועים ראשית */
+/* כרטיסיות אירועים */
 .events-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .event-card {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    border-right: 5px solid #007bff;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
 }
 
+.event-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-header-row h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #0f172a;
+}
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.badge-wedding {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.badge-engagement {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.card-details p {
+    margin: 6px 0;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+/* סקציית אודות */
 .about-section {
     margin-top: 40px;
+    padding-top: 25px;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
     line-height: 1.6;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
 }
 
-/* עיצוב סרגלי הצד */
+/* סרגלי צד צפים */
 .sidebar {
-    width: 260px;
+    width: 270px;
     background: #ffffff;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    height: 600px;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+    height: 580px;
     display: flex;
     flex-direction: column;
     position: sticky;
@@ -138,35 +202,29 @@ body {
 }
 
 .sidebar-header {
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
     margin-bottom: 15px;
     text-align: center;
 }
 
 .sidebar-header h3 {
-    margin: 0 0 8px 0;
-    font-size: 1.1rem;
-    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 1.05rem;
+    color: #0f172a;
 }
 
 .add-update-btn {
     display: inline-block;
-    background-color: #28a745;
+    background: #10b981;
     color: white;
     text-decoration: none;
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    transition: background 0.2s;
+    font-size: 0.8rem;
+    font-weight: 700;
 }
 
-.add-update-btn:hover {
-    background-color: #218838;
-}
-
-/* מסגרת הטיקר והאנימציה */
 .ticker-container {
     flex: 1;
     overflow: hidden;
@@ -177,7 +235,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    animation: scrollVertical 20s linear infinite;
+    animation: scrollVertical 22s linear infinite;
 }
 
 .ticker-container:hover .ticker-content {
@@ -185,51 +243,39 @@ body {
 }
 
 @keyframes scrollVertical {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-50%);
-    }
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
 }
 
-/* כרטיסיות בתוך הטיקר */
 .ticker-card {
-    background: #fdfdfd;
-    border: 1px solid #e9ecef;
-    border-right: 4px solid #007bff;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 0.9rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.88rem;
 }
 
 .ticker-card.past {
-    border-right-color: #6c757d;
+    border-right: 3px solid #94a3b8;
 }
 
 .ticker-card .card-title {
-    font-weight: bold;
-    color: #212529;
+    font-weight: 700;
+    color: #1e293b;
     margin-bottom: 4px;
 }
 
 .ticker-card .card-body {
-    color: #495057;
-    line-height: 1.4;
+    color: #475569;
 }
 
 .ticker-card .card-date {
     font-size: 0.75rem;
-    color: #868e96;
-    margin-top: 6px;
+    color: #94a3b8;
+    margin-top: 5px;
 }
 
-/* הסתרת סרגלים במסכים קטנים (ניידים) */
 @media (max-width: 1100px) {
-    .sidebar {
-        display: none;
-    }
-    .layout-wrapper {
-        padding: 10px;
-    }
+    .sidebar { display: none; }
+    .layout-wrapper { padding: 15px; }
 }
