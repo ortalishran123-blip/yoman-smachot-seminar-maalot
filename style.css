@@ -1,4 +1,4 @@
-/* הגדרות בסיס */
+/* הגדרות בסיס ופריסה מלאה לכל הדף */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,41 +6,47 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fdfbf7; /* רקע שמנת נעים וחם לכל הדף */
+}
+
 body {
-    background-color: #fcfbf9; /* רקע שמפניה/קרם עדין ורך */
     color: #2c3e50;
     direction: rtl;
     padding: 20px;
 }
 
-/* מבנה העמוד המקורי והמסודר */
+/* מבנה העמוד המקורי - 3 טורחים יציבים בשורה אחת */
 .main-layout {
     display: flex;
     gap: 20px;
-    max-width: 1350px;
+    max-width: 1400px;
     margin: 0 auto;
     align-items: flex-start;
+    flex-wrap: nowrap;
 }
 
 /* סיידברים */
 .sidebar {
     width: 280px;
-    flex-shrink: 0;
+    min-width: 280px;
     background: #ffffff;
-    border: 1px solid #e7e5e4;
-    border-radius: 10px;
+    border: 1px solid #f0eae1;
+    border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 /* אזור מרכזי */
 .content-center {
     flex-grow: 1;
     background: #ffffff;
-    border: 1px solid #e7e5e4;
-    border-radius: 10px;
+    border: 1px solid #f0eae1;
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 /* כותרת ראשית */
@@ -62,22 +68,21 @@ body {
     margin-bottom: 15px;
 }
 
-/* כפתור הוספת שמחה - בסגנון יוקרתי (זהב/ברונזה עמוק) */
+/* כפתור הוספת שמחה - עדין ואלגנטי בגווני שמפניה-זהב רך */
 .btn-add-event {
-    background: linear-gradient(135deg, #b45309, #d97706); /* גווני זהב-ברונזה אלגנטיים */
-    color: white;
-    border: none;
+    background: #fbf7f0;
+    color: #92400e;
+    border: 1px solid #fde68a;
     padding: 10px 20px;
     font-size: 14px;
-    font-weight: bold;
-    border-radius: 6px;
+    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(180, 83, 9, 0.2);
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
 }
 
 .btn-add-event:hover {
-    opacity: 0.9;
+    background: #fef3c7;
 }
 
 /* כפתור הוספת עדכון בסיידבר */
@@ -94,19 +99,19 @@ body {
 }
 
 .btn-add-update {
-    background-color: #57534e;
-    color: white;
-    border: none;
+    background: #fbf7f0;
+    color: #57534e;
+    border: 1px solid #e7e5e4;
     padding: 6px 12px;
     font-size: 13px;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
     width: fit-content;
 }
 
 .btn-add-update:hover {
-    background-color: #44403c;
+    background: #f5f5f4;
 }
 
 /* סרגל חיפוש וסינון */
@@ -121,14 +126,16 @@ body {
 .search-box input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #d7d3d0;
-    border-radius: 6px;
+    border: 1px solid #e7e5e4;
+    border-radius: 8px;
     font-size: 14px;
     outline: none;
+    background: #fafaf9;
 }
 
 .search-box input:focus {
-    border-color: #b45309;
+    border-color: #d97706;
+    background: #ffffff;
 }
 
 .filter-buttons {
@@ -139,24 +146,50 @@ body {
 .filter-btn {
     flex: 1;
     padding: 8px;
-    background: #f5f5f4;
+    background: #fafaf9;
     border: 1px solid #e7e5e4;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
     color: #57534e;
+    transition: all 0.2s;
 }
 
 .filter-btn.active {
-    background: #b45309;
-    color: white;
-    border-color: #b45309;
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+/* רשימת האירועים המרכזית עם מסגרת גלילה נקייה */
+#events-list {
+    max-height: 550px;
+    overflow-y: auto;
+    padding-left: 5px;
+}
+
+#events-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#events-list::-webkit-scrollbar-track {
+    background: #fbf7f0;
+    border-radius: 4px;
+}
+
+#events-list::-webkit-scrollbar-thumb {
+    background: #d7d3d0;
+    border-radius: 4px;
+}
+
+#events-list::-webkit-scrollbar-thumb:hover {
+    background: #d97706;
 }
 
 /* עיצוב שורות אירועים */
 .event-row-item {
     background: #fafaf9;
-    border: 1px solid #e7e5e4;
+    border: 1px solid #f0eae1;
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 12px;
@@ -184,7 +217,7 @@ body {
 
 .badge-wedding {
     background: #fdf2f8;
-    color: #db2777; /* גוון ורוד עדין ומלכותי לחתונה */
+    color: #db2777;
 }
 
 .badge-engagement {
@@ -206,7 +239,7 @@ body {
     display: inline-flex;
     align-items: center;
     background: #ffffff;
-    border: 1px solid #d7d3d0;
+    border: 1px solid #e7e5e4;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -228,14 +261,14 @@ body {
 
 .ticker-card {
     background: #fafaf9;
-    border: 1px solid #e7e5e4;
+    border: 1px solid #f0eae1;
     border-radius: 6px;
     padding: 10px;
     font-size: 13px;
 }
 
 .ticker-card.past {
-    border-right: 4px solid #b45309;
+    border-right: 4px solid #d97706;
 }
 
 .card-title {
@@ -264,7 +297,7 @@ body {
 .about-section {
     margin-top: 25px;
     padding-top: 15px;
-    border-top: 1px solid #e7e5e4;
+    border-top: 1px solid #f0eae1;
 }
 
 .about-section h2 {
