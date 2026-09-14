@@ -78,9 +78,10 @@ function renderMainEvents() {
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         
-        // הגדרת קישורים לשני שירותי הניווט
+        // הגדרת קישורים לשירותי הניווט השונים
         const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
+        const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
 
         html += `
             <div class="event-row-item">
@@ -93,7 +94,8 @@ function renderMainEvents() {
                     ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
                     ${hall ? `<span><strong>אולם:</strong> ${hall} 
                         <a href="${moovitUrl}" target="_blank" class="moovit-btn" title="דרכי הגעה במוביט">🚌 מוביט</a>
-                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="ניווט בוויז" style="margin-right: 5px;">🚗 וויז</a>
+                        <a href="${wazeUrl}" target="_blank" class="moovit-btn" title="ניווט בוויז" style="margin-right: 5px;">🚗</a>
+                        <a href="${mapsUrl}" target="_blank" class="moovit-btn" title="ניווט במפות גוגל" style="margin-right: 5px;">🗺️ גוגל מפות</a>
                     </span>` : ''}
                 </div>
             </div>
