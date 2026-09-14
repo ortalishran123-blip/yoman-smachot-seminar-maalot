@@ -1,184 +1,133 @@
-// הקישור החדש ל-CSV
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv';
+const MAIN_CSV_URL = 'הכנס_כאן_את_הקישור_ל-CSV_הראשי';
+const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
 
-let allEvents = [];
-let currentFilter = 'all';
+document.addEventListener('DOMContentLoaded', () => {
+    loadMainEvents();
+    loadUpdatesTicker();
+});
 
-// פונקציה להסרת ניקוד עברית
-function removeNiqqud(text) {
-    if (!text) return '';
-    return text.replace(/[\u0591-\u05C7]/g, '');
-}
-
-function loadEvents() {
-    Papa.parse(SHEET_CSV_URL, {
+// טעינת אירועים ראשיים + סרגל אירועים שעברו
+function loadMainEvents() {
+    Papa.parse(MAIN_CSV_URL, {
         download: true,
-        header: false,
-        skipEmptyLines: 'greedy',
-        complete: function(results) {
-            const rows = results.data;
-            allEvents = [];
-
-            if (!rows || rows.length <= 1) return;
-
-            // עוברים על כל השורות בגיליון (מתחילים משורה 1, אחרי הכותרות)
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row || row.length === 0) continue;
-
-                // בדיקה פרטנית לכל שורה: האם התא הראשוני מכיל תאריך ושעה של גוגל טופס
-                const cell0 = (row[0] || '').trim();
-                const isFormResponse = cell0.includes('/') && (cell0.includes(':') || cell0.length > 12);
-
-                const offset = isFormResponse ? 1 : 0;
-
-                const hebrewDate    = removeNiqqud(row[0 + offset] || '').trim();
-                const dayOfWeek     = removeNiqqud(row[1 + offset] || '').trim();
-                const classGroup    = removeNiqqud(row[2 + offset] || '').trim();
-                const track         = removeNiqqud(row[3 + offset] || '').trim();
-                const names         = removeNiqqud(row[4 + offset] || '').trim();
-                const location      = removeNiqqud(row[5 + offset] || '').trim();
-                const eventType     = removeNiqqud(row[6 + offset] || 'חתונה').trim();
-                const gregorianDate = (row[7 + offset] || '').trim();
-
-                if (!names && !hebrewDate) continue;
-
-                allEvents.push({
-                    hebrewDate,
-                    dayOfWeek,
-                    classGroup,
-                    track,
-                    names,
-                    location,
-                    eventType,
-                    gregorianDate
-                });
-            }
-
-            sortEventsByDate();
-            applyFilters();
-        },
-        error: function(err) {
-            console.error('שגיאה בטעינת הנתונים:', err);
-            document.getElementById('events-list').innerHTML = '<p style="text-align:center; color:red;">שגיאה בטעינת הנתונים מהגליון</p>';
+        header: true,
+        complete: (results) => {
+            const data = results.data;
+            renderMainEvents(data);
+            renderPastEventsTicker(data);
         }
     });
 }
 
-function parseDate(gregorianDateStr) {
-    if (!gregorianDateStr) return null;
-    const parts = gregorianDateStr.split('/');
-    if (parts.length !== 3) return null;
-    return new Date(parts[2], parts[1] - 1, parts[0]);
-}
-
-function sortEventsByDate() {
-    allEvents.sort((a, b) => {
-        const dateA = parseDate(a.gregorianDate);
-        const dateB = parseDate(b.gregorianDate);
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateA - dateB;
-    });
-}
-
-function getDaysLeftText(gregorianDateStr) {
-    const eventDate = parseDate(gregorianDateStr);
-    if (!eventDate || isNaN(eventDate.getTime())) return '';
+// עיבוד ורנדור סרגל שמאל (אירועים שהיו)
+function renderPastEventsTicker(events) {
+    const pastContainer = document.getElementById('past-events-ticker');
+    if (!pastContainer) return;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const diffTime = eventDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const pastEvents = events.filter(item => {
+        if (!item['תאריך']) return false;
+        const eventDate = parseDate(item['תאריך']);
+        if (!eventDate) return false;
 
-    if (diffDays === 0) return 'היום!';
-    if (diffDays === 1) return 'מחר!';
-    if (diffDays > 1) return `עוד ${diffDays} ימים`;
-    if (diffDays < 0) return 'עבר';
-    return '';
-}
+        const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24));
+        const type = (item['סוג השמחה'] || '').trim();
 
-function renderEvents(events) {
-    const container = document.getElementById('events-list');
-    container.innerHTML = '';
+        if (type === 'חתונה' && diffDays > 0 && diffDays <= 30) return true;
+        if (type === 'אירוסין' && diffDays > 0 && diffDays <= 10) return true;
 
-    if (events.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#888; padding: 40px;">לא נמצאו אירועים מתאימים</p>';
+        return false;
+    });
+
+    if (pastEvents.length === 0) {
+        pastContainer.innerHTML = '<div class="ticker-card past">אין אירועים שהיו לאחרונה</div>';
         return;
     }
 
-    events.forEach(event => {
-        const daysLeftText = getDaysLeftText(event.gregorianDate);
-        
-        const isEngagement = event.eventType.includes('אירוסין');
-        const typeClass = isEngagement ? 'engagement' : 'wedding';
-        const typeText = isEngagement ? 'אירוסין' : 'חתונה';
-
-        const moovitUrl = `https://moovitapp.com/?to=${encodeURIComponent(event.location)}&host=moovitapp.com&metroId=1`;
-
-        const card = document.createElement('div');
-        card.className = `event-card ${typeClass}`;
-        card.innerHTML = `
-            <div class="event-main">
-                <div class="event-header">
-                    <h3>כלה: ${event.names || 'ללא שם'}</h3>
-                    <span class="badge ${typeClass}">${typeText}</span>
-                </div>
-                ${event.classGroup ? `<div class="event-info">🏫 כיתה: ${event.classGroup}</div>` : ''}
-                ${event.track ? `<div class="event-info">🎓 מסלול: ${event.track}</div>` : ''}
-                ${event.location ? `
-                <div class="event-info location-row">
-                    <span>📍 אולם: ${event.location}</span>
-                    <a href="${moovitUrl}" target="_blank" class="transit-btn" title="דרכי הגעה ב-Moovit">🚌</a>
-                </div>` : ''}
-            </div>
-            <div class="date-box">
-                <div class="day">${event.dayOfWeek}</div>
-                <div class="hebrew-date">${event.hebrewDate}</div>
-                ${daysLeftText ? `<div class="days-left">${daysLeftText}</div>` : ''}
+    let html = '';
+    pastEvents.forEach(item => {
+        html += `
+            <div class="ticker-card past">
+                <div class="card-title">${item['שם הכלה'] || ''} - ${item['סוג השמחה'] || ''}</div>
+                <div class="card-body">${item['כיתה'] || ''} | ${item['אולם'] || ''}</div>
+                <div class="card-date">${item['תאריך'] || ''}</div>
             </div>
         `;
-        container.appendChild(card);
+    });
+
+    // הכפלת התוכן ליצירת הלולאה האינסופית
+    pastContainer.innerHTML = html + html;
+}
+
+// טעינת סרגל ימין (עדכונים מיוחדים)
+function loadUpdatesTicker() {
+    Papa.parse(UPDATES_CSV_URL, {
+        download: true,
+        header: false, // קריאה לפי אינדקסים כדי להתעלם מהכותרות ומשעת המילוי
+        complete: (results) => {
+            const rows = results.data.slice(1); // דילוג על שורת הכותרות
+            renderUpdatesTicker(rows);
+        }
     });
 }
 
-function applyFilters() {
-    const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+function renderUpdatesTicker(rows) {
+    const updatesContainer = document.getElementById('updates-ticker');
+    if (!updatesContainer) return;
 
-    const filtered = allEvents.filter(event => {
-        // סינון אירועים שכבר עברו
-        const daysLeftText = getDaysLeftText(event.gregorianDate);
-        if (daysLeftText === 'עבר') return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-        const matchesSearch = event.names.toLowerCase().includes(searchTerm) ||
-                              event.classGroup.toLowerCase().includes(searchTerm) ||
-                              event.track.toLowerCase().includes(searchTerm) ||
-                              event.location.toLowerCase().includes(searchTerm) ||
-                              event.hebrewDate.toLowerCase().includes(searchTerm);
+    const activeUpdates = [];
 
-        if (!matchesSearch) return false;
+    rows.forEach(row => {
+        // התעלמות מעמודה 0 (חותמת הזמן)
+        const title = row[1] ? row[1].trim() : '';
+        const content = row[2] ? row[2].trim() : '';
+        const expDateStr = row[3] ? row[3].trim() : '';
 
-        const isEngagement = event.eventType.includes('אירוסין');
+        if (!title && !content) return;
 
-        if (currentFilter === 'wedding') return !isEngagement;
-        if (currentFilter === 'engagement') return isEngagement;
-        
-        return true;
+        if (expDateStr) {
+            const expDate = parseDate(expDateStr);
+            if (expDate && expDate < today) return; // הסרה אם התאריך עבר
+        }
+
+        activeUpdates.push({ title, content, expDateStr });
     });
 
-    renderEvents(filtered);
+    if (activeUpdates.length === 0) {
+        updatesContainer.innerHTML = '<div class="ticker-card">אין עדכונים חדשים</div>';
+        return;
+    }
+
+    let html = '';
+    activeUpdates.forEach(item => {
+        html += `
+            <div class="ticker-card">
+                <div class="card-title">${item.title}</div>
+                <div class="card-body">${item.content}</div>
+                ${item.expDateStr ? `<div class="card-date">בתוקף עד: ${item.expDateStr}</div>` : ''}
+            </div>
+        `;
+    });
+
+    // הכפלת התוכן ליצירת הלולאה האינסופית
+    updatesContainer.innerHTML = html + html;
 }
 
-document.getElementById('search-input').addEventListener('input', applyFilters);
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentFilter = e.target.getAttribute('data-filter');
-        applyFilters();
-    });
-});
-
-loadEvents();
+// פונקציית עזר להמרת מחרוזת תאריך לאובייקט Date
+function parseDate(dateStr) {
+    if (!dateStr) return null;
+    const parts = dateStr.split(/[\/.-]/);
+    if (parts.length === 3) {
+        let day = parseInt(parts[0], 10);
+        let month = parseInt(parts[1], 10) - 1;
+        let year = parseInt(parts[2], 10);
+        if (year < 100) year += 2000;
+        return new Date(year, month, day);
+    }
+    return null;
+}
