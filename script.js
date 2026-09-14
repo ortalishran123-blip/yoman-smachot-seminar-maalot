@@ -88,7 +88,7 @@ function renderMainEvents() {
                 </div>
                 <div class="event-details-inline">
                     ${dateHebrew ? `<span><strong>תאריך:</strong> ${dateHebrew}</span>` : ''}
-                    ${hall ? `<span><strong>אולם:</strong> ${hall} <a href="${moovitUrl}" target="_blank" class="moovit-link">מוביט 🚌</a></span>` : ''}
+                    ${hall ? `<span><strong>אולם:</strong> ${hall} <a href="${moovitUrl}" target="_blank" class="moovit-btn" title="דרכי הגעה במוביט">🚌 מוביט</a></span>` : ''}
                 </div>
             </div>
         `;
