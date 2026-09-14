@@ -83,10 +83,11 @@ function renderMainEvents() {
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
         const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
 
-        // אייקונים בעיצוב מדויק (כולל סמל הוויז המדויק עם רקע תכלת וגלגלים)
+        // אייקונים בעיצוב מדויק
         const moovitIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v4M6 20v2m12-2v2M5 11h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
         
-        const wazeIcon = `<svg width="22" height="22" viewBox="0 0 512 512" style="vertical-align: middle;"><rect width="512" height="512" rx="100" fill="#33ccff"/><path d="M380 230c0-65.5-53.5-119-119-119s-119 53.5-119 119c0 31.4 12.1 60 31.9 81.3L150 370l62.2-18.1c20.3 11 43.8 17.1 68.8 17.1 65.5 0 119-53.5 119-119z" fill="#ffffff"/><circle cx="210" cy="225" r="18" fill="#1b1e2b"/><circle cx="302" cy="225" r="18" fill="#1b1e2b"/><path d="M210 270c20 15 72 15 92 0" stroke="#1b1e2b" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="195" cy="370" r="30" fill="#1b1e2b"/><circle cx="325" cy="370" r="30" fill="#1b1e2b"/></svg>`;
+        // סמל וויז מדויק המותאם בדיוק למקור
+        const wazeIcon = `<svg width="22" height="22" viewBox="0 0 512 512" style="vertical-align: middle;"><circle cx="256" cy="256" r="256" fill="#33ccff"/><path d="M120 230 C120 140, 190 90, 275 90 C360 90, 420 150, 420 235 C420 320, 360 380, 275 380 C245 380, 215 370, 190 355 L130 375 L145 320 C128 295, 120 265, 120 230 Z" fill="#ffffff"/><circle cx="195" cy="400" r="32" fill="#1a1c28"/><circle cx="340" cy="380" r="32" fill="#1a1c28"/><circle cx="230" cy="210" r="16" fill="#1a1c28"/><circle cx="320" cy="210" r="16" fill="#1a1c28"/><path d="M 235 255 Q 275 290 315 255" stroke="#1a1c28" stroke-width="12" stroke-linecap="round" fill="none"/></svg>`;
         
         const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
 
