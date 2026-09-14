@@ -25,9 +25,11 @@ function loadMainEvents() {
 
 function renderMainEvents() {
     const listContainer = document.getElementById('events-list');
-    const searchVal = (document.getElementById('search-input').value || '').toLowerCase().trim();
+    if (!listContainer) return;
+
+    const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
     
-    // נקודת ייחוס: תחילת היום הנוכחי (חצות)
+    // קביעת תאריך היום בחצות
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -40,7 +42,7 @@ function renderMainEvents() {
         if (dateStr) {
             const eventDate = parseDate(dateStr);
             if (eventDate && eventDate.getTime() < today.getTime()) {
-                return false; // סינון אירועים שעברו
+                return false;
             }
         }
 
@@ -86,6 +88,7 @@ function renderMainEvents() {
             </div>
         `;
     });
+
     listContainer.innerHTML = html;
 }
 
@@ -204,7 +207,6 @@ function renderUpdatesTicker(rows) {
     updatesContainer.innerHTML = html + html;
 }
 
-// פונקציית המרת תאריך עמידה
 function parseDate(dateStr) {
     if (!dateStr) return null;
     const cleanStr = dateStr.toString().trim();
