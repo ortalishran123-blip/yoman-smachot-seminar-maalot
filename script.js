@@ -1,10 +1,39 @@
-// משתנים גלובליים
-let allEvents = [];
+// משתנים גלובליים ונתונים לדוגמה לבדיקת המערכת
+let allEvents = [
+    {
+        "שם הכלה": "רבקה כהן",
+        "חתונה/ אירוסין": "חתונה",
+        "כיתה": "יב 1",
+        "מסלול": "הוראה",
+        "תאריך לועזי": "2026-09-20",
+        "תאריך עברי": "ז' תשרי תשפ\"ז",
+        "אולם": "האצולה בני ברק"
+    },
+    {
+        "שם הכלה": "מיכל לוי",
+        "חתונה/ אירוסין": "אירוסין",
+        "כיתה": "יב 2",
+        "מסלול": "גרפיקה",
+        "תאריך לועזי": "2026-09-15",
+        "תאריך עברי": "ב' תשרי תשפ\"ז",
+        "אולם": "ארמונות חן ירושלים"
+    },
+    {
+        "שם הכלה": "שרה ישראלי",
+        "חתונה/ אירוסין": "חתונה",
+        "כיתה": "יג",
+        "מסלול": "תכנות",
+        "תאריך לועזי": "2026-10-01",
+        "תאריך עברי": "י\"ח תשרי תשפ\"ז",
+        "אולם": "ווג בני ברק"
+    }
+];
+
 let currentFilter = 'all';
 
 // טעינת הנתונים בעליית העמוד
 document.addEventListener('DOMContentLoaded', () => {
-    fetchData();
+    renderMainEvents();
 
     // הגדרת האזנה לחיפוש
     const searchInput = document.getElementById('search-input');
@@ -14,15 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// פונקציה לטעינת הנתונים (מ-Google Sheets או קובץ מקומי)
-function fetchData() {
-    if (typeof gapi !== 'undefined' && gapi.client) {
-        loadGoogleSheetData();
-    } else {
-        renderMainEvents();
-    }
-}
 
 // פונקציית עזר לשליפת ערך מתוך השורה לפי שמות שדות אפשריים
 function getRowValue(item, possibleKeys) {
@@ -38,7 +58,6 @@ function getRowValue(item, possibleKeys) {
 function parseDate(dateStr) {
     if (!dateStr) return null;
     
-    // ניסיון לזהות פורמט נפוץ כמו DD/MM/YYYY או YYYY-MM-DD
     let parts = dateStr.split(/[\/\-\.]/);
     if (parts.length === 3) {
         let day = parseInt(parts[0], 10);
@@ -52,7 +71,7 @@ function parseDate(dateStr) {
     let parsed = new Date(dateStr);
     if (!isNaN(parsed.getTime())) return parsed;
 
-    return null; // אם התאריך לא תקין (למשל תאריך עברי מחרוזתי), מחזיר null בבטחה
+    return null;
 }
 
 // פונקציה לעדכון מסננים (הכל, חתונות, אירוסין)
@@ -87,7 +106,6 @@ function renderMainEvents() {
         const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
         if (dateStr) {
             const eventDate = parseDate(dateStr);
-            // אם הצלחנו לפענח תאריך והוא עבר - נסנן אותו החוצה
             if (eventDate && eventDate.getTime() < today.getTime()) {
                 return false; 
             }
@@ -106,13 +124,7 @@ function renderMainEvents() {
     });
 
     if (filtered.length === 0) {
-        if (currentFilter === 'engagement') {
-            listContainer.innerHTML = '<div class="no-results">אין אירוסין בקרוב</div>';
-        } else if (currentFilter === 'wedding') {
-            listContainer.innerHTML = '<div class="no-results">אין חתונות בקרוב</div>';
-        } else {
-            listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
-        }
+        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
         return;
     }
 
@@ -126,7 +138,6 @@ function renderMainEvents() {
         const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
         const hall = getRowValue(item, ['אולם']);
 
-        // חישוב בטוח של הימים שנותרו
         let countdownBadgeHtml = '';
         if (dateStr) {
             const eventDate = parseDate(dateStr);
