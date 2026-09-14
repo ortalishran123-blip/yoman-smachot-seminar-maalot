@@ -1,25 +1,84 @@
 const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT4sD0e69J_cUX043g8x2Z809Y8jK2f-5H-7uJ1x-m5N5F3G1L-0y6V7-N/pub?output=csv';
 const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
 
+let allEvents = [];
+let currentFilter = 'all';
+
 document.addEventListener('DOMContentLoaded', () => {
     loadMainEvents();
     loadUpdatesTicker();
+    setupEventListeners();
 });
 
-// טעינת אירועים ראשיים + סרגל אירועים שעברו
 function loadMainEvents() {
     Papa.parse(MAIN_CSV_URL, {
         download: true,
         header: true,
         complete: (results) => {
-            const data = results.data;
-            renderMainEvents(data);
-            renderPastEventsTicker(data);
+            allEvents = results.data;
+            renderMainEvents();
+            renderPastEventsTicker(allEvents);
         }
     });
 }
 
-// עיבוד ורנדור סרגל שמאל (אירועים שהיו)
+function renderMainEvents() {
+    const listContainer = document.getElementById('events-list');
+    const searchVal = document.getElementById('search-input').value.toLowerCase();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const filtered = allEvents.filter(item => {
+        if (!item['שם הכלה'] && !item['סוג השמחה']) return false;
+
+        // סינון לפי תאריך עתידי בלבד לרשימה הראשית
+        if (item['תאריך']) {
+            const eventDate = parseDate(item['תאריך']);
+            if (eventDate && eventDate < today) return false;
+        }
+
+        // סינון לפי קטגוריות
+        const type = (item['סוג השמחה'] || '').trim();
+        if (currentFilter === 'wedding' && type !== 'חתונה') return false;
+        if (currentFilter === 'engagement' && type !== 'אירוסין') return false;
+
+        // סינון לפי חיפוש
+        const searchText = `${item['שם הכלה'] || ''} ${item['כיתה'] || ''} ${item['מסלול'] || ''} ${item['אולם'] || ''}`.toLowerCase();
+        return searchText.includes(searchVal);
+    });
+
+    if (filtered.length === 0) {
+        listContainer.innerHTML = '<div style="text-align:center; padding:20px;">לא נמצאו שמחות תואמות</div>';
+        return;
+    }
+
+    let html = '';
+    filtered.forEach(item => {
+        html += `
+            <div class="event-card">
+                <h3>${item['שם הכלה'] || ''} - ${item['סוג השמחה'] || ''}</h3>
+                <p><strong>כיתה/מסלול:</strong> ${item['כיתה'] || ''} ${item['מסלול'] || ''}</p>
+                <p><strong>תאריך:</strong> ${item['תאריך'] || ''}</p>
+                <p><strong>אולם:</strong> ${item['אולם'] || ''}</p>
+            </div>
+        `;
+    });
+    listContainer.innerHTML = html;
+}
+
+function setupEventListeners() {
+    document.getElementById('search-input').addEventListener('input', renderMainEvents);
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.getAttribute('data-filter');
+            renderMainEvents();
+        });
+    });
+}
+
 function renderPastEventsTicker(events) {
     const pastContainer = document.getElementById('past-events-ticker');
     if (!pastContainer) return;
@@ -57,17 +116,15 @@ function renderPastEventsTicker(events) {
         `;
     });
 
-    // הכפלת התוכן ליצירת הלולאה האינסופית
     pastContainer.innerHTML = html + html;
 }
 
-// טעינת סרגל ימין (עדכונים מיוחדים)
 function loadUpdatesTicker() {
     Papa.parse(UPDATES_CSV_URL, {
         download: true,
-        header: false, // קריאה לפי אינדקסים כדי להתעלם מהכותרות ומשעת המילוי
+        header: false,
         complete: (results) => {
-            const rows = results.data.slice(1); // דילוג על שורת הכותרות
+            const rows = results.data.slice(1);
             renderUpdatesTicker(rows);
         }
     });
@@ -83,7 +140,6 @@ function renderUpdatesTicker(rows) {
     const activeUpdates = [];
 
     rows.forEach(row => {
-        // התעלמות מעמודה 0 (חותמת הזמן)
         const title = row[1] ? row[1].trim() : '';
         const content = row[2] ? row[2].trim() : '';
         const expDateStr = row[3] ? row[3].trim() : '';
@@ -92,7 +148,7 @@ function renderUpdatesTicker(rows) {
 
         if (expDateStr) {
             const expDate = parseDate(expDateStr);
-            if (expDate && expDate < today) return; // הסרה אם התאריך עבר
+            if (expDate && expDate < today) return;
         }
 
         activeUpdates.push({ title, content, expDateStr });
@@ -114,11 +170,9 @@ function renderUpdatesTicker(rows) {
         `;
     });
 
-    // הכפלת התוכן ליצירת הלולאה האינסופית
     updatesContainer.innerHTML = html + html;
 }
 
-// פונקציית עזר להמרת מחרוזת תאריך לאובייקט Date
 function parseDate(dateStr) {
     if (!dateStr) return null;
     const parts = dateStr.split(/[\/.-]/);
