@@ -1,208 +1,125 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background-color: #f4f7f6;
-    color: #333;
-    padding: 20px;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.main-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.main-header h1 {
-    color: #2c3e50;
-    font-size: 2rem;
-    margin-bottom: 5px;
-}
-
-.subtitle {
-    color: #7f8c8d;
-    font-size: 1.05rem;
-}
-
-/* עיצוב מיוחד ומעודכן לכפתור הוספת שמחה */
-.add-event-container {
-    margin-top: 18px;
-}
-
-.add-event-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    color: #ffffff;
-    text-decoration: none;
-    padding: 12px 26px;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
-    transition: all 0.3s ease;
-}
-
-.add-event-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.45);
-    background: linear-gradient(135deg, #219150, #27ae60);
-}
-
-.btn-icon {
-    font-size: 1.1rem;
-}
-
-/* סרגל חיפוש וסינון */
-.search-bar {
-    margin-bottom: 15px;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 12px 18px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-}
-
-.search-bar input:focus {
-    border-color: #3498db;
-}
-
-.filters {
+/* פריסת העמודות הראשית */
+.layout-wrapper {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 25px;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 10px;
 }
 
-.filter-btn {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 8px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    transition: all 0.2s;
+.main-content {
+    flex: 1;
+    max-width: 800px;
 }
 
-.filter-btn:hover {
-    background-color: #f0f0f0;
-}
-
-.filter-btn.active {
-    background-color: #3498db;
-    color: white;
-    border-color: #3498db;
-}
-
-/* כרטיסיות אירועים */
-.events-list {
+/* עיצוב סרגלי הצד */
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    height: 600px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    position: sticky;
+    top: 20px;
 }
 
-.event-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-    border-right: 6px solid #3498db;
-}
-
-.event-card.engagement {
-    border-right-color: #e67e22;
-}
-
-.event-main {
-    flex-grow: 1;
-}
-
-.event-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-
-.event-header h3 {
-    font-size: 1.2rem;
-    color: #2c3e50;
-}
-
-.badge {
-    font-size: 0.75rem;
-    padding: 3px 8px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-}
-
-.badge.wedding { background-color: #3498db; }
-.badge.engagement { background-color: #e67e22; }
-
-.event-info {
-    font-size: 0.95rem;
-    color: #555;
-    margin-top: 4px;
-}
-
-.location-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.transit-btn {
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: transform 0.2s;
-}
-
-.transit-btn:hover {
-    transform: scale(1.2);
-}
-
-.date-box {
+.sidebar-header {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
     text-align: center;
-    background-color: #f8f9fa;
-    padding: 10px 15px;
-    border-radius: 8px;
-    min-width: 110px;
 }
 
-.date-box .day {
+.sidebar-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.add-update-btn {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: bold;
-    color: #7f8c8d;
+    transition: background 0.2s;
+}
+
+.add-update-btn:hover {
+    background-color: #218838;
+}
+
+/* מסגרת הטיקר והאנימציה */
+.ticker-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.ticker-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: scrollVertical 20s linear infinite;
+}
+
+.ticker-container:hover .ticker-content {
+    animation-play-state: paused;
+}
+
+@keyframes scrollVertical {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+/* כרטיסיות בתוך הטיקר */
+.ticker-card {
+    background: #fdfdfd;
+    border: 1px solid #e9ecef;
+    border-right: 4px solid #007bff;
+    border-radius: 8px;
+    padding: 10px 12px;
     font-size: 0.9rem;
 }
 
-.date-box .hebrew-date {
-    font-size: 0.95rem;
-    color: #2c3e50;
-    margin: 4px 0;
+.ticker-card.past {
+    border-right-color: #6c757d;
 }
 
-.date-box .days-left {
-    font-size: 0.8rem;
-    color: #e74c3c;
+.ticker-card .card-title {
     font-weight: bold;
+    color: #212529;
+    margin-bottom: 4px;
+}
+
+.ticker-card .card-body {
+    color: #495057;
+    line-height: 1.4;
+}
+
+.ticker-card .card-date {
+    font-size: 0.75rem;
+    color: #868e96;
+    margin-top: 6px;
+}
+
+/* הסטרבלת סרגלים במסכים קטנים (ניידים) */
+@media (max-width: 1100px) {
+    .sidebar {
+        display: none;
+    }
+    .layout-wrapper {
+        padding: 0;
+    }
 }
