@@ -4,48 +4,48 @@
 
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f4f6f8;
+    background-color: #f1f5f9;
     margin: 0;
     padding: 0;
-    color: #1e293b;
+    color: #0f172a;
 }
 
 .layout-wrapper {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 25px;
-    max-width: 1380px;
+    gap: 24px;
+    max-width: 1350px;
     margin: 0 auto;
     padding: 30px 15px;
 }
 
-/* התוכן המרכזי */
+/* העמוד מרכזי */
 .main-content {
     flex: 1;
-    max-width: 780px;
+    max-width: 760px;
     background: #ffffff;
     border-radius: 20px;
-    padding: 35px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    padding: 32px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     border: 1px solid #e2e8f0;
 }
 
 .main-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
 .main-header h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     color: #0f172a;
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     font-weight: 800;
 }
 
 .subtitle {
     color: #64748b;
-    font-size: 1rem;
+    font-size: 0.98rem;
     margin: 0 0 20px 0;
 }
 
@@ -72,14 +72,14 @@ body {
 /* חיפוש וסינון */
 .search-bar input {
     width: 100%;
-    padding: 15px 20px;
+    padding: 14px 18px;
     border: 1px solid #cbd5e1;
     border-radius: 12px;
-    font-size: 1rem;
+    font-size: 0.98rem;
     background: #f8fafc;
     outline: none;
     transition: all 0.2s ease;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .search-bar input:focus {
@@ -91,7 +91,7 @@ body {
 .filters {
     display: flex;
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 24px;
 }
 
 .filter-btn {
@@ -117,20 +117,20 @@ body {
 .events-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .event-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 14px;
-    padding: 22px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
     transition: all 0.2s ease;
 }
 
 .event-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
 }
 
@@ -138,17 +138,17 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .card-header-row h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: #0f172a;
 }
 
 .badge {
-    padding: 5px 12px;
+    padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -165,9 +165,9 @@ body {
 }
 
 .card-details p {
-    margin: 6px 0;
+    margin: 4px 0;
     color: #475569;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
 }
 
 .no-results {
@@ -179,22 +179,22 @@ body {
 
 /* סקציית אודות */
 .about-section {
-    margin-top: 40px;
-    padding-top: 25px;
+    margin-top: 35px;
+    padding-top: 22px;
     border-top: 1px solid #e2e8f0;
     color: #64748b;
     line-height: 1.6;
 }
 
-/* סרגלי צד צפים */
+/* סרגלי צד */
 .sidebar {
-    width: 270px;
+    width: 260px;
     background: #ffffff;
     border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    padding: 18px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04);
     border: 1px solid #e2e8f0;
-    height: 580px;
+    height: 560px;
     display: flex;
     flex-direction: column;
     position: sticky;
@@ -203,14 +203,14 @@ body {
 
 .sidebar-header {
     border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 12px;
-    margin-bottom: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
     text-align: center;
 }
 
 .sidebar-header h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+    font-size: 0.98rem;
     color: #0f172a;
 }
 
@@ -219,9 +219,9 @@ body {
     background: #10b981;
     color: white;
     text-decoration: none;
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
@@ -234,7 +234,7 @@ body {
 .ticker-content {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     animation: scrollVertical 22s linear infinite;
 }
 
@@ -252,7 +252,7 @@ body {
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 12px;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
 }
 
 .ticker-card.past {
@@ -272,7 +272,7 @@ body {
 .ticker-card .card-date {
     font-size: 0.75rem;
     color: #94a3b8;
-    margin-top: 5px;
+    margin-top: 4px;
 }
 
 @media (max-width: 1100px) {
