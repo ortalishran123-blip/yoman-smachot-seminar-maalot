@@ -151,7 +151,7 @@ body {
     color: #ffffff;
 }
 
-/* סידור השם והתגית מעל זה מתחת לזה, ושאר הפרטים בשורה אחידה משמאל */
+/* עיצוב שורת האירוע והפרטים המובנים */
 .events-grid {
     display: flex;
     flex-direction: column;
@@ -181,13 +181,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
+    gap: 4px;
     flex-shrink: 0;
 }
 
 .event-main-info h3 {
     font-size: 1.15rem;
     font-weight: 700;
+}
+
+.event-class-track {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .event-details-inline {
@@ -207,12 +213,30 @@ body {
     border: 1px solid var(--border-color);
 }
 
+.moovit-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 6px;
+    font-size: 0.8rem;
+    background: #eff6ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #bfdbfe;
+    display: inline-block;
+}
+
+.moovit-link:hover {
+    background: #dbeafe;
+}
+
 .badge {
     padding: 3px 10px;
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 700;
     display: inline-block;
+    margin-top: 2px;
 }
 
 .badge-wedding {
