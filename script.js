@@ -1,127 +1,139 @@
-const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv';
-const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv';
+const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv'; //[cite: 1]
+const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv'; //[cite: 1]
 
-const EVENT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform';
-const UPDATE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdkYAUSIoFMBtpxSyiMzAp8fSZlY2LQLbHHLHKDy1A2v_PinA/viewform?usp=dialog';
+const EVENT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform'; //[cite: 1]
+const UPDATE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdkYAUSIoFMBtpxSyiMzAp8fSZlY2LQLbHHLHKDy1A2v_PinA/viewform?usp=dialog'; //[cite: 1]
 
-let allEvents = [];
-let currentFilter = 'all';
+let allEvents = []; //[cite: 1]
+let currentFilter = 'all'; //[cite: 1]
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadMainEvents();
-    loadUpdatesTicker();
-    setupEventListeners();
-    setupFormButtons();
-});
+document.addEventListener('DOMContentLoaded', () => { //[cite: 1]
+    loadMainEvents(); //[cite: 1]
+    loadUpdatesTicker(); //[cite: 1]
+    setupEventListeners(); //[cite: 1]
+    setupFormButtons(); //[cite: 1]
+}); //[cite: 1]
 
-function loadMainEvents() {
-    Papa.parse(MAIN_CSV_URL, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-            allEvents = results.data;
-            renderMainEvents();
-            renderPastEventsTicker(allEvents);
-        }
-    });
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
 }
 
-function renderMainEvents() {
-    const listContainer = document.getElementById('events-list');
-    if (!listContainer) return;
+function clearSearch() {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = '';
+        document.getElementById('clear-search').style.display = 'none';
+        renderMainEvents();
+    }
+}
 
-    const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+function loadMainEvents() { //[cite: 1]
+    Papa.parse(MAIN_CSV_URL, { //[cite: 1]
+        download: true, //[cite: 1]
+        header: true, //[cite: 1]
+        skipEmptyLines: true, //[cite: 1]
+        complete: (results) => { //[cite: 1]
+            allEvents = results.data; //[cite: 1]
+            renderMainEvents(); //[cite: 1]
+            renderPastEventsTicker(allEvents); //[cite: 1]
+        }
+    }); //[cite: 1]
+} //[cite: 1]
+
+function renderMainEvents() { //[cite: 1]
+    const listContainer = document.getElementById('events-list'); //[cite: 1]
+    if (!listContainer) return; //[cite: 1]
+
+    const searchInput = document.getElementById('search-input');
+    const searchVal = (searchInput?.value || '').toLowerCase().trim();
     
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const clearBtn = document.getElementById('clear-search');
+    if (clearBtn) {
+        clearBtn.style.display = searchVal ? 'block' : 'none';
+    }
+    
+    const today = new Date(); //[cite: 1]
+    today.setHours(0, 0, 0, 0); //[cite: 1]
 
-    const filtered = allEvents.filter(item => {
-        const hasContent = Object.values(item).some(val => val && val.toString().trim() !== '');
-        if (!hasContent) return false;
+    const filtered = allEvents.filter(item => { //[cite: 1]
+        const hasContent = Object.values(item).some(val => val && val.toString().trim() !== ''); //[cite: 1]
+        if (!hasContent) return false; //[cite: 1]
 
-        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
-        if (dateStr) {
-            const eventDate = parseDate(dateStr);
-            if (eventDate && eventDate.getTime() < today.getTime()) {
-                return false;
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']); //[cite: 1]
+        if (dateStr) { //[cite: 1]
+            const eventDate = parseDate(dateStr); //[cite: 1]
+            if (eventDate && eventDate.getTime() < today.getTime()) { //[cite: 1]
+                return false; //[cite: 1]
             }
         }
 
-        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim();
-        if (currentFilter === 'wedding' && !type.includes('חתונה')) return false;
-        if (currentFilter === 'engagement' && !type.includes('אירוסין')) return false;
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim(); //[cite: 1]
+        if (currentFilter === 'wedding' && !type.includes('חתונה')) return false; //[cite: 1]
+        if (currentFilter === 'engagement' && !type.includes('אירוסין')) return false; //[cite: 1]
 
-        if (searchVal !== '') {
-            const rowString = Object.values(item).join(' ').toLowerCase();
-            return rowString.includes(searchVal);
+        if (searchVal !== '') { //[cite: 1]
+            const rowString = Object.values(item).join(' ').toLowerCase(); //[cite: 1]
+            return rowString.includes(searchVal); //[cite: 1]
         }
 
-        return true;
+        return true; //[cite: 1]
     });
 
-    // מיון האירועים לפי התאריך הלועזי - מהקרוב ביותר לרחוק ביותר
-    filtered.sort((a, b) => {
-        const dateAStr = getRowValue(a, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
-        const dateBStr = getRowValue(b, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
-        const dateA = parseDate(dateAStr);
-        const dateB = parseDate(dateBStr);
+    filtered.sort((a, b) => { //[cite: 1]
+        const dateA = parseDate(getRowValue(a, ['תאריך לועזי', 'תאריך', 'תאריך אירוע'])); //[cite: 1]
+        const dateB = parseDate(getRowValue(b, ['תאריך לועזי', 'תאריך', 'תאריך אירוע'])); //[cite: 1]
 
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateA.getTime() - dateB.getTime();
+        if (!dateA) return 1; //[cite: 1]
+        if (!dateB) return -1; //[cite: 1]
+        return dateA.getTime() - dateB.getTime(); //[cite: 1]
     });
 
-    if (filtered.length === 0) {
-        if (currentFilter === 'engagement') {
-            listContainer.innerHTML = '<div class="no-results">אין אירוסין בקרוב</div>';
-        } else if (currentFilter === 'wedding') {
-            listContainer.innerHTML = '<div class="no-results">אין חתונות בקרוב</div>';
-        } else {
-            listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
-        }
-        return;
+    if (filtered.length === 0) { //[cite: 1]
+        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות תואמות</div>';
+        return; //[cite: 1]
     }
 
-    let html = '';
-    filtered.forEach(item => {
-        const name = getRowValue(item, ['שם הכלה', 'שם', 'שם מלא']) || 'אירוע';
-        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim();
-        const classGroup = getRowValue(item, ['כיתה']);
-        const track = getRowValue(item, ['מסלול']);
-        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']);
-        const hall = getRowValue(item, ['אולם']);
+    let html = ''; //[cite: 1]
+    filtered.forEach(item => { //[cite: 1]
+        const name = getRowValue(item, ['שם הכלה', 'שם', 'שם מלא']) || 'אירוע'; //[cite: 1]
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה', 'סוג']).trim(); //[cite: 1]
+        const classGroup = getRowValue(item, ['כיתה']); //[cite: 1]
+        const track = getRowValue(item, ['מסלול']); //[cite: 1]
+        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']); //[cite: 1]
+        const dateGregorian = getRowValue(item, ['תאריך לועזי', 'תאריך אירוע']);
+        const hall = getRowValue(item, ['אולם']); //[cite: 1]
 
-        const classTrackText = [classGroup, track].filter(Boolean).join(' ');
-        const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement';
+        const classTrackText = [classGroup, track].filter(Boolean).join(' '); //[cite: 1]
+        const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement'; //[cite: 1]
         
-        let countdownBadgeHtml = '';
-        const dateStrForCountdown = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
-        if (dateStrForCountdown) {
-            const eventDate = parseDate(dateStrForCountdown);
+        let countdownBadgeHtml = ''; //[cite: 1]
+        if (dateGregorian) {
+            const eventDate = parseDate(dateGregorian);
             if (eventDate) {
                 const diffTime = eventDate.getTime() - today.getTime();
                 const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-                let countdownText = '';
-                let isUrgent = diffDays <= 7;
-
-                if (diffDays === 0) countdownText = 'היום!';
-                else if (diffDays === 1) countdownText = 'מחר';
-                else if (diffDays === 2) countdownText = 'מחרתיים';
-                else countdownText = `עוד ${diffDays} ימים`;
-
-                const badgeStyleClass = isUrgent ? 'countdown-badge urgent' : 'countdown-badge normal';
+                let countdownText = diffDays === 0 ? 'היום!' : diffDays === 1 ? 'מחר' : diffDays === 2 ? 'מחרתיים' : `עוד ${diffDays} ימים`;
+                const badgeStyleClass = diffDays <= 7 ? 'countdown-badge urgent' : 'countdown-badge normal';
                 countdownBadgeHtml = `<div class="${badgeStyleClass}">${countdownText}</div>`;
             }
         }
 
-        const moovitUrl = hall ? `https://moovitapp.com/?q=${encodeURIComponent(hall)}&lang=he` : '';
-        const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
-        const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
+        // עדכון הקישור של מוביט לקישור ניווט ישיר למיקום
+        const moovitUrl = hall ? `https://moovitapp.com/?to=${encodeURIComponent(hall)}&metroId=1&lang=he` : '';
+        const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : ''; //[cite: 1]
+        const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : ''; //[cite: 1]
 
-        const moovitIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v4M6 20v2m12-2v2M5 11h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-        const wazeIcon = `<svg width="22" height="22" viewBox="0 0 512 512" style="vertical-align: middle;"><circle cx="256" cy="256" r="256" fill="#33ccff"/><path d="M120 230 C120 140, 190 90, 275 90 C360 90, 420 150, 420 235 C420 320, 360 380, 275 380 C245 380, 215 370, 190 355 L130 375 L145 320 C128 295, 120 265, 120 230 Z" fill="#ffffff"/><circle cx="195" cy="400" r="32" fill="#1a1c28"/><circle cx="340" cy="380" r="32" fill="#1a1c28"/><circle cx="230" cy="210" r="16" fill="#1a1c28"/><circle cx="320" cy="210" r="16" fill="#1a1c28"/><path d="M 235 255 Q 275 290 315 255" stroke="#1a1c28" stroke-width="12" stroke-linecap="round" fill="none"/></svg>`;
-        const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
+        const shareText = `שמחה ביומן: ${name} - ${type} (${dateHebrew}) ${hall ? 'באולם ' + hall : ''}`;
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+        
+        let googleCalUrl = '#';
+        if (dateGregorian) {
+            const parsed = parseDate(dateGregorian);
+            if (parsed) {
+                const isoDate = parsed.toISOString().replace(/-|:|\.\d+/g, '').slice(0, 8);
+                googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(name + ' - ' + type)}&details=${encodeURIComponent(shareText)}&dates=${isoDate}/${isoDate}`;
+            }
+        }
 
         html += `
             <div class="event-row-item">
@@ -131,114 +143,107 @@ function renderMainEvents() {
                     <h3 class="event-main-info">${name}</h3>
                     ${classTrackText ? `<span class="event-divider">|</span><span class="event-class-track">${classTrackText}</span>` : ''}
                 </div>
-                <div class="event-date-row">
-                    תאריך: ${dateHebrew}
-                </div>
+                <div class="event-date-row">תאריך: ${dateHebrew}</div>
                 <div class="event-location-row">
-                    אולם: ${hall} 
-                    ${moovitUrl ? `<a href="${moovitUrl}" target="_blank" class="moovit-btn" title="מוביט">${moovitIcon} מוביט</a>` : ''}
-                    ${wazeUrl ? `<a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 2px 4px; display: inline-flex; align-items: center;">${wazeIcon}</a>` : ''}
-                    ${mapsUrl ? `<a href="${mapsUrl}" target="_blank" class="moovit-btn" title="גוגל מפות" style="margin-right: 5px;">${mapsIcon} מפות</a>` : ''}
+                    ${hall ? `אולם: ${hall}` : ''} 
+                    ${moovitUrl ? `<a href="${moovitUrl}" target="_blank" class="moovit-btn">מוביט</a>` : ''}
+                    ${wazeUrl ? `<a href="${wazeUrl}" target="_blank" class="moovit-btn">ווייז</a>` : ''}
+                    ${mapsUrl ? `<a href="${mapsUrl}" target="_blank" class="moovit-btn">מפות</a>` : ''}
+                </div>
+                <div class="event-actions-row">
+                    <a href="${waUrl}" target="_blank" class="action-btn btn-wa">שתף ב-WhatsApp</a>
+                    ${googleCalUrl !== '#' ? `<a href="${googleCalUrl}" target="_blank" class="action-btn btn-cal">הוסף ליומן</a>` : ''}
                 </div>
             </div>
         `;
     });
 
-    listContainer.innerHTML = html;
+    listContainer.innerHTML = html; //[cite: 1]
 }
 
-function getRowValue(row, possibleKeys) {
-    for (let key of possibleKeys) {
-        if (row[key] !== undefined && row[key] !== null) {
-            return row[key].toString();
+function getRowValue(row, possibleKeys) { //[cite: 1]
+    for (let key of possibleKeys) { //[cite: 1]
+        if (row[key] !== undefined && row[key] !== null) { //[cite: 1]
+            return row[key].toString(); //[cite: 1]
         }
     }
-    return '';
+    return ''; //[cite: 1]
 }
 
-function setupEventListeners() {
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', renderMainEvents);
+function setupEventListeners() { //[cite: 1]
+    const searchInput = document.getElementById('search-input'); //[cite: 1]
+    if (searchInput) { //[cite: 1]
+        searchInput.addEventListener('input', renderMainEvents); //[cite: 1]
     }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-            currentFilter = e.currentTarget.getAttribute('data-filter');
-            renderMainEvents();
+    document.querySelectorAll('.filter-btn').forEach(btn => { //[cite: 1]
+        btn.addEventListener('click', (e) => { //[cite: 1]
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); //[cite: 1]
+            e.currentTarget.classList.add('active'); //[cite: 1]
+            currentFilter = e.currentTarget.getAttribute('data-filter'); //[cite: 1]
+            renderMainEvents(); //[cite: 1]
         });
     });
 }
 
-function setupFormButtons() {
-    document.querySelectorAll('button, a').forEach(el => {
-        const text = el.textContent || '';
-        if (text.includes('הוספת שמחה חדשה')) {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.open(EVENT_FORM_URL, '_blank');
+function setupFormButtons() { //[cite: 1]
+    document.querySelectorAll('button, a').forEach(el => { //[cite: 1]
+        const text = el.textContent || ''; //[cite: 1]
+        if (text.includes('הוספת שמחה חדשה')) { //[cite: 1]
+            el.addEventListener('click', (e) => { //[cite: 1]
+                e.preventDefault(); //[cite: 1]
+                window.open(EVENT_FORM_URL, '_blank'); //[cite: 1]
             });
         }
-        if (text.includes('הוספת עדכון')) {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.open(UPDATE_FORM_URL, '_blank');
+        if (text.includes('הוספת עדכון')) { //[cite: 1]
+            el.addEventListener('click', (e) => { //[cite: 1]
+                e.preventDefault(); //[cite: 1]
+                window.open(UPDATE_FORM_URL, '_blank'); //[cite: 1]
             });
         }
     });
 }
 
-function renderPastEventsTicker(events) {
-    const pastContainer = document.getElementById('past-events-ticker');
-    if (!pastContainer) return;
+function renderPastEventsTicker(events) { //[cite: 1]
+    const pastContainer = document.getElementById('past-events-ticker'); //[cite: 1]
+    if (!pastContainer) return; //[cite: 1]
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = new Date(); //[cite: 1]
+    today.setHours(0, 0, 0, 0); //[cite: 1]
 
-    const pastEvents = events.filter(item => {
-        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']);
-        if (!dateStr) return false;
+    const pastEvents = events.filter(item => { //[cite: 1]
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']); //[cite: 1]
+        if (!dateStr) return false; //[cite: 1]
         
-        const eventDate = parseDate(dateStr);
-        if (!eventDate) return false;
+        const eventDate = parseDate(dateStr); //[cite: 1]
+        if (!eventDate) return false; //[cite: 1]
 
-        const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24));
-        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']).trim();
+        const diffDays = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24)); //[cite: 1]
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']).trim(); //[cite: 1]
 
-        if (type.includes('חתונה') && diffDays > 0 && diffDays <= 30) return true;
-        if (type.includes('אירוסין') && diffDays > 0 && diffDays <= 10) return true;
+        if (type.includes('חתונה') && diffDays > 0 && diffDays <= 30) return true; //[cite: 1]
+        if (type.includes('אירוסין') && diffDays > 0 && diffDays <= 10) return true; //[cite: 1]
 
-        return false;
+        return false; //[cite: 1]
     });
 
-    if (pastEvents.length === 0) {
-        pastContainer.innerHTML = '<div class="ticker-card past">אין אירועים שהיו לאחרונה</div>';
-        return;
+    if (pastEvents.length === 0) { //[cite: 1]
+        pastContainer.innerHTML = '<div class="ticker-card past">אין אירועים שהיו לאחרונה</div>'; //[cite: 1]
+        return; //[cite: 1]
     }
 
-    let html = '';
-    pastEvents.forEach(item => {
-        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']);
-        const eventDate = parseDate(dateStr);
-        const diffDays = eventDate ? Math.floor((today - eventDate) / (1000 * 60 * 60 * 24)) : 0;
+    let html = ''; //[cite: 1]
+    pastEvents.forEach(item => { //[cite: 1]
+        const dateStr = getRowValue(item, ['תאריך לועזי', 'תאריך']); //[cite: 1]
+        const eventDate = parseDate(dateStr); //[cite: 1]
+        const diffDays = eventDate ? Math.floor((today - eventDate) / (1000 * 60 * 60 * 24)) : 0; //[cite: 1]
 
-        let timeAgoText = '';
-        if (diffDays === 0) {
-            timeAgoText = 'היום!';
-        } else if (diffDays === 1) {
-            timeAgoText = 'אתמול';
-        } else if (diffDays === 2) {
-            timeAgoText = 'שלשום';
-        } else {
-            timeAgoText = `לפני ${diffDays} ימים`;
-        }
+        let timeAgoText = diffDays === 0 ? 'היום!' : diffDays === 1 ? 'אתמול' : diffDays === 2 ? 'שלשום' : `לפני ${diffDays} ימים`; //[cite: 1]
 
-        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
-        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']);
-        const name = getRowValue(item, ['שם הכלה', 'שם']);
-        const classGroup = getRowValue(item, ['כיתה']);
+        const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr; //[cite: 1]
+        const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']); //[cite: 1]
+        const name = getRowValue(item, ['שם הכלה', 'שם']); //[cite: 1]
+        const classGroup = getRowValue(item, ['כיתה']); //[cite: 1]
 
         html += `
             <div class="ticker-card past" style="position: relative; overflow: hidden;">
@@ -247,79 +252,79 @@ function renderPastEventsTicker(events) {
                 ${classGroup ? `<div class="card-body">כיתה: ${classGroup}</div>` : ''}
                 <div class="card-date">${dateHebrew}</div>
             </div>
-        `;
+        `; //[cite: 1]
     });
 
-    pastContainer.innerHTML = html;
+    pastContainer.innerHTML = html; //[cite: 1]
 }
 
-function loadUpdatesTicker() {
-    Papa.parse(UPDATES_CSV_URL, {
-        download: true,
-        header: false,
-        skipEmptyLines: true,
-        complete: (results) => {
-            const rows = results.data.slice(1);
-            renderUpdatesTicker(rows);
+function loadUpdatesTicker() { //[cite: 1]
+    Papa.parse(UPDATES_CSV_URL, { //[cite: 1]
+        download: true, //[cite: 1]
+        header: false, //[cite: 1]
+        skipEmptyLines: true, //[cite: 1]
+        complete: (results) => { //[cite: 1]
+            const rows = results.data.slice(1); //[cite: 1]
+            renderUpdatesTicker(rows); //[cite: 1]
         }
-    });
+    }); //[cite: 1]
 }
 
-function renderUpdatesTicker(rows) {
-    const updatesContainer = document.getElementById('updates-ticker');
-    if (!updatesContainer) return;
+function renderUpdatesTicker(rows) { //[cite: 1]
+    const updatesContainer = document.getElementById('updates-ticker'); //[cite: 1]
+    if (!updatesContainer) return; //[cite: 1]
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = new Date(); //[cite: 1]
+    today.setHours(0, 0, 0, 0); //[cite: 1]
 
-    const activeUpdates = [];
+    const activeUpdates = []; //[cite: 1]
 
-    rows.forEach(row => {
-        const title = row[1] ? row[1].toString().trim() : '';
-        const content = row[2] ? row[2].toString().trim() : '';
-        const expDateStr = row[3] ? row[3].toString().trim() : '';
+    rows.forEach(row => { //[cite: 1]
+        const title = row[1] ? row[1].toString().trim() : ''; //[cite: 1]
+        const content = row[2] ? row[2].toString().trim() : ''; //[cite: 1]
+        const expDateStr = row[3] ? row[3].toString().trim() : ''; //[cite: 1]
 
-        if (!title && !content) return;
+        if (!title && !content) return; //[cite: 1]
 
-        if (expDateStr) {
-            const expDate = parseDate(expDateStr);
-            if (expDate && expDate < today) return;
+        if (expDateStr) { //[cite: 1]
+            const expDate = parseDate(expDateStr); //[cite: 1]
+            if (expDate && expDate < today) return; //[cite: 1]
         }
 
-        activeUpdates.push({ title, content, expDateStr });
+        activeUpdates.push({ title, content, expDateStr }); //[cite: 1]
     });
 
-    if (activeUpdates.length === 0) {
-        updatesContainer.innerHTML = '<div class="ticker-card">אין עדכונים חדשים</div>';
-        return;
+    if (activeUpdates.length === 0) { //[cite: 1]
+        updatesContainer.innerHTML = '<div class="ticker-card">אין עדכונים חדשים</div>'; //[cite: 1]
+        return; //[cite: 1]
     }
 
-    let html = '';
-    activeUpdates.forEach(item => {
+    let html = ''; //[cite: 1]
+    activeUpdates.forEach(item => { //[cite: 1]
         html += `
             <div class="ticker-card">
                 <div class="card-title">${item.title}</div>
                 <div class="card-body">${item.content}</div>
                 ${item.expDateStr ? `<div class="card-date">תאריך: ${item.expDateStr}</div>` : ''}
             </div>
-        `;
+        `; //[cite: 1]
     });
 
-    updatesContainer.innerHTML = html;
+    updatesContainer.innerHTML = html; //[cite: 1]
 }
 
-function parseDate(dateStr) {
-    if (!dateStr) return null;
-    const cleanStr = dateStr.toString().trim();
-    const parts = cleanStr.split(/[\/.-]/);
-    if (parts.length === 3) {
-        let day = parseInt(parts[0], 10);
-        let month = parseInt(parts[1], 10) - 1;
-        let year = parseInt(parts[2], 10);
-        if (year < 100) year += 2000;
-        const d = new Date(year, month, day);
-        d.setHours(0, 0, 0, 0);
-        return d;
+function parseDate(dateStr) { //[cite: 1]
+    if (!dateStr) return null; //[cite: 1]
+    const cleanStr = dateStr.toString().trim(); //[cite: 1]
+    const parts = cleanStr.split(/[\/.-]/); //[cite: 1]
+    if (parts.length === 3) { //[cite: 1]
+        let day = parseInt(parts[0], 10); //[cite: 1]
+        let month = parseInt(parts[1], 10) - 1; //[cite: 1]
+        let year = parseInt(parts[2], 10); //[cite: 1]
+        if (year < 100) year += 2000; //[cite: 1]
+        const d = new Date(year, month, day); //[cite: 1]
+        d.setHours(0, 0, 0, 0); //[cite: 1]
+        return d; //[cite: 1]
     }
-    return null;
+    return null; //[cite: 1]
 }
