@@ -1,5 +1,5 @@
 // ==========================================
-// פונקציות עזר למניעת שגיאות הרצה (Crash Guards)
+// פונקציות עזר מוגנות (Crash Guards)
 // ==========================================
 
 function escapeHtml(str) {
@@ -44,7 +44,7 @@ function getDaysDiff(today, targetDate) {
 }
 
 // ==========================================
-// פונקציות הרינדור לסיידברים
+// פונקציות לרינדור הסיידברים
 // ==========================================
 
 function renderPastEventsTicker(events) {
@@ -132,7 +132,6 @@ function renderUpdatesTicker(rows) {
         rows.forEach(row => {
             if (!row) return;
 
-            // תמיכה בפורמט מערך ובפורמט אובייקט
             const title = Array.isArray(row) ? (row[1] || '') : (row.title || row.כותרת || '');
             const content = Array.isArray(row) ? (row[2] || '') : (row.content || row.תוכן || '');
             const expDateStr = Array.isArray(row) ? (row[3] || '') : (row.expDate || row.תפוגה || '');
