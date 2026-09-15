@@ -36,6 +36,7 @@ function renderMainEvents() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // סינון האירועים העתידיים
     const filtered = allEvents.filter(item => {
         const hasContent = Object.values(item).some(val => val && val.toString().trim() !== '');
         if (!hasContent) return false;
@@ -58,6 +59,18 @@ function renderMainEvents() {
         }
 
         return true;
+    });
+
+    // מיון האירועים לפי התאריך הלועזי - מהקרוב ביותר לרחוק ביותר
+    filtered.sort((a, b) => {
+        const dateAStr = getRowValue(a, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
+        const dateBStr = getRowValue(b, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
+        const dateA = parseDate(dateAStr);
+        const dateB = parseDate(dateBStr);
+
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateA.getTime() - dateB.getTime();
     });
 
     if (filtered.length === 0) {
@@ -215,13 +228,13 @@ function renderPastEventsTicker(events) {
 
         let timeAgoText = '';
         if (diffDays === 0) {
-            timeAgoText = 'היום!';
+            timeAgoTest = 'היום!';
         } else if (diffDays === 1) {
-            timeAgoText = 'אתמול';
+            timeAgoTest = 'אתמול';
         } else if (diffDays === 2) {
-            timeAgoText = 'שלשום';
+            timeAgoTest = 'שלשום';
         } else {
-            timeAgoText = `לפני ${diffDays} ימים`;
+            timeAgoTest = `לפני ${diffDays} ימים`;
         }
 
         const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
@@ -231,7 +244,7 @@ function renderPastEventsTicker(events) {
 
         html += `
             <div class="ticker-card past" style="position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; right: 0; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 6px;">${timeAgoText}</div>
+                <div style="position: absolute; top: 0; right: 0; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 6px;">${timeAgoTest}</div>
                 <div class="card-title" style="margin-top: 5px;">${name} - ${type}</div>
                 ${classGroup ? `<div class="card-body">כיתה: ${classGroup}</div>` : ''}
                 <div class="card-date">${dateHebrew}</div>
