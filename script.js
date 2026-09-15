@@ -14,19 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupFormButtons();
 });
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-}
-
-function clearSearch() {
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.value = '';
-        document.getElementById('clear-search').style.display = 'none';
-        renderMainEvents();
-    }
-}
-
 function loadMainEvents() {
     Papa.parse(MAIN_CSV_URL, {
         download: true,
@@ -44,13 +31,7 @@ function renderMainEvents() {
     const listContainer = document.getElementById('events-list');
     if (!listContainer) return;
 
-    const searchInput = document.getElementById('search-input');
-    const searchVal = (searchInput?.value || '').toLowerCase().trim();
-    
-    const clearBtn = document.getElementById('clear-search');
-    if (clearBtn) {
-        clearBtn.style.display = searchVal ? 'block' : 'none';
-    }
+    const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -79,9 +60,12 @@ function renderMainEvents() {
         return true;
     });
 
+    // מיון האירועים לפי התאריך הלועזי - מהקרוב ביותר לרחוק ביותר
     filtered.sort((a, b) => {
-        const dateA = parseDate(getRowValue(a, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']));
-        const dateB = parseDate(getRowValue(b, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']));
+        const dateAStr = getRowValue(a, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
+        const dateBStr = getRowValue(b, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
+        const dateA = parseDate(dateAStr);
+        const dateB = parseDate(dateBStr);
 
         if (!dateA) return 1;
         if (!dateB) return -1;
@@ -89,7 +73,13 @@ function renderMainEvents() {
     });
 
     if (filtered.length === 0) {
-        listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות תואמות</div>';
+        if (currentFilter === 'engagement') {
+            listContainer.innerHTML = '<div class="no-results">אין אירוסין בקרוב</div>';
+        } else if (currentFilter === 'wedding') {
+            listContainer.innerHTML = '<div class="no-results">אין חתונות בקרוב</div>';
+        } else {
+            listContainer.innerHTML = '<div class="no-results">לא נמצאו שמחות עתידיות תואמות</div>';
+        }
         return;
     }
 
@@ -100,20 +90,27 @@ function renderMainEvents() {
         const classGroup = getRowValue(item, ['כיתה']);
         const track = getRowValue(item, ['מסלול']);
         const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || getRowValue(item, ['תאריך לועזי']);
-        const dateGregorian = getRowValue(item, ['תאריך לועזי', 'תאריך אירוע']);
         const hall = getRowValue(item, ['אולם']);
 
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement';
         
         let countdownBadgeHtml = '';
-        if (dateGregorian) {
-            const eventDate = parseDate(dateGregorian);
+        const dateStrForCountdown = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
+        if (dateStrForCountdown) {
+            const eventDate = parseDate(dateStrForCountdown);
             if (eventDate) {
                 const diffTime = eventDate.getTime() - today.getTime();
                 const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-                let countdownText = diffDays === 0 ? 'היום!' : diffDays === 1 ? 'מחר' : diffDays === 2 ? 'מחרתיים' : `עוד ${diffDays} ימים`;
-                const badgeStyleClass = diffDays <= 7 ? 'countdown-badge urgent' : 'countdown-badge normal';
+                let countdownText = '';
+                let isUrgent = diffDays <= 7;
+
+                if (diffDays === 0) countdownText = 'היום!';
+                else if (diffDays === 1) countdownText = 'מחר';
+                else if (diffDays === 2) countdownText = 'מחרתיים';
+                else countdownText = `עוד ${diffDays} ימים`;
+
+                const badgeStyleClass = isUrgent ? 'countdown-badge urgent' : 'countdown-badge normal';
                 countdownBadgeHtml = `<div class="${badgeStyleClass}">${countdownText}</div>`;
             }
         }
@@ -122,18 +119,9 @@ function renderMainEvents() {
         const wazeUrl = hall ? `https://www.waze.com/ul?q=${encodeURIComponent(hall)}&navigate=yes` : '';
         const mapsUrl = hall ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hall)}` : '';
 
-        // קישור לשיתוף ב-WhatsApp והוספה ליומן גוגל
-        const shareText = `שמחה ביומן: ${name} - ${type} (${dateHebrew}) ${hall ? 'באולם ' + hall : ''}`;
-        const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-        
-        let googleCalUrl = '#';
-        if (dateGregorian) {
-            const parsed = parseDate(dateGregorian);
-            if (parsed) {
-                const isoDate = parsed.toISOString().replace(/-|:|\.\d+/g, '').slice(0, 8);
-                googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(name + ' - ' + type)}&details=${encodeURIComponent(shareText)}&dates=${isoDate}/${isoDate}`;
-            }
-        }
+        const moovitIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 3px;"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v4M6 20v2m12-2v2M5 11h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        const wazeIcon = `<svg width="22" height="22" viewBox="0 0 512 512" style="vertical-align: middle;"><circle cx="256" cy="256" r="256" fill="#33ccff"/><path d="M120 230 C120 140, 190 90, 275 90 C360 90, 420 150, 420 235 C420 320, 360 380, 275 380 C245 380, 215 370, 190 355 L130 375 L145 320 C128 295, 120 265, 120 230 Z" fill="#ffffff"/><circle cx="195" cy="400" r="32" fill="#1a1c28"/><circle cx="340" cy="380" r="32" fill="#1a1c28"/><circle cx="230" cy="210" r="16" fill="#1a1c28"/><circle cx="320" cy="210" r="16" fill="#1a1c28"/><path d="M 235 255 Q 275 290 315 255" stroke="#1a1c28" stroke-width="12" stroke-linecap="round" fill="none"/></svg>`;
+        const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
 
         html += `
             <div class="event-row-item">
@@ -143,16 +131,14 @@ function renderMainEvents() {
                     <h3 class="event-main-info">${name}</h3>
                     ${classTrackText ? `<span class="event-divider">|</span><span class="event-class-track">${classTrackText}</span>` : ''}
                 </div>
-                <div class="event-date-row">תאריך: ${dateHebrew}</div>
-                <div class="event-location-row">
-                    ${hall ? `אולם: ${hall}` : ''} 
-                    ${moovitUrl ? `<a href="${moovitUrl}" target="_blank" class="moovit-btn">מוביט</a>` : ''}
-                    ${wazeUrl ? `<a href="${wazeUrl}" target="_blank" class="moovit-btn">ווייז</a>` : ''}
-                    ${mapsUrl ? `<a href="${mapsUrl}" target="_blank" class="moovit-btn">מפות</a>` : ''}
+                <div class="event-date-row">
+                    תאריך: ${dateHebrew}
                 </div>
-                <div class="event-actions-row">
-                    <a href="${waUrl}" target="_blank" class="action-btn btn-wa">שתף ב-WhatsApp</a>
-                    ${googleCalUrl !== '#' ? `<a href="${googleCalUrl}" target="_blank" class="action-btn btn-cal">הוסף ליומן</a>` : ''}
+                <div class="event-location-row">
+                    אולם: ${hall} 
+                    ${moovitUrl ? `<a href="${moovitUrl}" target="_blank" class="moovit-btn" title="מוביט">${moovitIcon} מוביט</a>` : ''}
+                    ${wazeUrl ? `<a href="${wazeUrl}" target="_blank" class="moovit-btn" title="וויז" style="margin-right: 5px; padding: 2px 4px; display: inline-flex; align-items: center;">${wazeIcon}</a>` : ''}
+                    ${mapsUrl ? `<a href="${mapsUrl}" target="_blank" class="moovit-btn" title="גוגל מפות" style="margin-right: 5px;">${mapsIcon} מפות</a>` : ''}
                 </div>
             </div>
         `;
@@ -238,7 +224,16 @@ function renderPastEventsTicker(events) {
         const eventDate = parseDate(dateStr);
         const diffDays = eventDate ? Math.floor((today - eventDate) / (1000 * 60 * 60 * 24)) : 0;
 
-        let timeAgoText = diffDays === 0 ? 'היום!' : diffDays === 1 ? 'אתמול' : diffDays === 2 ? 'שלשום' : `לפני ${diffDays} ימים`;
+        let timeAgoText = '';
+        if (diffDays === 0) {
+            timeAgoText = 'היום!';
+        } else if (diffDays === 1) {
+            timeAgoText = 'אתמול';
+        } else if (diffDays === 2) {
+            timeAgoText = 'שלשום';
+        } else {
+            timeAgoText = `לפני ${diffDays} ימים`;
+        }
 
         const dateHebrew = getRowValue(item, ['תאריך עברי', 'תאריך']) || dateStr;
         const type = getRowValue(item, ['חתונה/ אירוסין', 'סוג השמחה']);
