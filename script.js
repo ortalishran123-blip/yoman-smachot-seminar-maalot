@@ -83,7 +83,7 @@ function renderMainEvents() {
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement';
         
-        // חישוב ימים עד לאירוע והגדרת התגית
+        // חישוב ימים עד לאירוע והצגת התגית
         let countdownBadgeHtml = '';
         const dateStrForCountdown = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
         if (dateStrForCountdown) {
@@ -91,19 +91,13 @@ function renderMainEvents() {
             if (eventDate) {
                 const diffTime = eventDate.getTime() - today.getTime();
                 const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
                 let countdownText = '';
-                let isUrgent = diffDays <= 7; // בולט אם נשארו שבוע או פחות
+                let isUrgent = diffDays <= 7;
 
-                if (diffDays === 0) {
-                    countdownText = 'היום!';
-                } else if (diffDays === 1) {
-                    countdownText = 'מחר';
-                } else if (diffDays === 2) {
-                    countdownText = 'מחרתיים';
-                } else {
-                    countdownText = `עוד ${diffDays} ימים`;
-                }
+                if (diffDays === 0) countdownText = 'היום!';
+                else if (diffDays === 1) countdownText = 'מחר';
+                else if (diffDays === 2) countdownText = 'מחרתיים';
+                else countdownText = `עוד ${diffDays} ימים`;
 
                 const badgeStyleClass = isUrgent ? 'countdown-badge urgent' : 'countdown-badge normal';
                 countdownBadgeHtml = `<div class="${badgeStyleClass}">${countdownText}</div>`;
@@ -119,7 +113,7 @@ function renderMainEvents() {
         const mapsIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea4335" stroke-width="2.5" style="vertical-align: middle; margin-left: 3px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#4285f4"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>`;
 
         html += `
-            <div class="event-row-item" style="position: relative; overflow: hidden;">
+            <div class="event-row-item">
                 ${countdownBadgeHtml}
                 <div class="event-header-row">
                     ${type ? `<span class="badge ${badgeClass}">${type}</span>` : ''}
