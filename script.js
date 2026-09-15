@@ -83,18 +83,24 @@ function renderMainEvents() {
         const classTrackText = [classGroup, track].filter(Boolean).join(' ');
         const badgeClass = type.includes('חתונה') ? 'badge-wedding' : 'badge-engagement';
         
-        let countdownText = '';
+        // חישוב ימים עד לאירוע והצגת התגית
+        let countdownBadgeHtml = '';
         const dateStrForCountdown = getRowValue(item, ['תאריך לועזי', 'תאריך', 'תאריך אירוע']);
         if (dateStrForCountdown) {
             const eventDate = parseDate(dateStrForCountdown);
             if (eventDate) {
                 const diffTime = eventDate.getTime() - today.getTime();
                 const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                let countdownText = '';
+                let isUrgent = diffDays <= 7;
 
-                if (diffDays === 0) countdownText = ' (היום!)';
-                else if (diffDays === 1) countdownText = ' (מחר)';
-                else if (diffDays === 2) countdownText = ' (מחרתיים)';
-                else countdownText = ` (עוד ${diffDays} ימים)`;
+                if (diffDays === 0) countdownText = 'היום!';
+                else if (diffDays === 1) countdownText = 'מחר';
+                else if (diffDays === 2) countdownText = 'מחרתיים';
+                else countdownText = `עוד ${diffDays} ימים`;
+
+                const badgeStyleClass = isUrgent ? 'countdown-badge urgent' : 'countdown-badge normal';
+                countdownBadgeHtml = `<div class="${badgeStyleClass}">${countdownText}</div>`;
             }
         }
 
@@ -108,13 +114,14 @@ function renderMainEvents() {
 
         html += `
             <div class="event-row-item">
+                ${countdownBadgeHtml}
                 <div class="event-header-row">
                     ${type ? `<span class="badge ${badgeClass}">${type}</span>` : ''}
                     <h3 class="event-main-info">${name}</h3>
                     ${classTrackText ? `<span class="event-divider">|</span><span class="event-class-track">${classTrackText}</span>` : ''}
                 </div>
                 <div class="event-date-row">
-                    תאריך: ${dateHebrew} <span style="font-weight: normal; color: #78716c; font-size: 13px;">${countdownText}</span>
+                    תאריך: ${dateHebrew}
                 </div>
                 <div class="event-location-row">
                     אולם: ${hall} 
