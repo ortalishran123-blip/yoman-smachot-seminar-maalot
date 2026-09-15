@@ -4,13 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>יומן שמחות סמינר מעלות</title>
-    
-    <!-- תגיות לשיתוף ברשתות וב-WhatsApp -->
-    <meta name="description" content="יומן השמחות והעדכונים המרכזי והעדכני">
-    <meta property="og:title" content="יומן שמחות סמינר מעלות">
-    <meta property="og:description" content="לוח אירועים, עדכונים ושמחות">
-    
     <link rel="stylesheet" href="style.css?v=12.0">
+    <!-- PapaParse לקריאת קבצי CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
 <body>
@@ -20,19 +15,17 @@
         <!-- סיידבר ימני: אירועים שהיו לאחרונה -->
         <aside class="sidebar sidebar-right">
             <div class="sidebar-header">
-                <h2>📜 אירועים שהיו לאחרונה</h2>
+                <h2>📜 מזל טוב! (אירועים שהיו)</h2>
             </div>
             <div id="past-events-ticker" class="ticker-container">
-                <!-- כאן יטענו האירועים שהיו -->
+                <!-- כאן יופיעו האירועים שהיו -->
             </div>
         </aside>
 
         <!-- אזור מרכזי: שמחות עתידיות -->
         <main class="content-center">
             <header class="page-header">
-                <div class="header-top-bar">
-                    <button id="theme-toggle" class="btn-theme-toggle" title="החלפת מצב תצוגה">🌙 מצב כהה</button>
-                </div>
+                <button class="theme-toggle-btn" onclick="toggleDarkMode()">🌙 מצב כהה / אור</button>
                 <h1>יומן שמחות סמינר מעלות</h1>
                 <p class="subtitle">מאגר השמחות המרכזי והעדכני</p>
                 <button class="btn-add-event" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform', '_blank')">
@@ -42,9 +35,9 @@
 
             <!-- סרגל חיפוש וסינון -->
             <section class="filter-section">
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="חיפוש לפי שם, כיתה, מסלול, אולם...">
-                    <button id="clear-search-btn" class="clear-search-btn" style="display: none;">✕</button>
+                <div class="search-box" style="position: relative;">
+                    <input type="text" id="search-input" placeholder="חיפוש לפי כלה, כיתה, מסלול, אולם...">
+                    <button id="clear-search" class="clear-search-btn" onclick="clearSearch()" style="display: none;">✕</button>
                 </div>
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">הכל</button>
@@ -61,7 +54,7 @@
             <!-- אודות / מידע תחתון -->
             <section class="about-section">
                 <h2>אודות היומן</h2>
-                <p>ברוכים הבאים למאגר השמחות והעדכונים. המערכת נועדה לשתף אתכם בכל שמחה ואירוע בשעה טובה.</p>
+                <p>ברוכים הבאים למאגר השמחות והעדכונים. המערכת נועדה לשתף אתכם כל שמחה של חברי וחברות צוות או בוגרות הסמינר, חתונות ואירוסין בשעה טובה.</p>
             </section>
         </main>
 
@@ -79,9 +72,6 @@
         </aside>
 
     </div>
-
-    <!-- כפתור חזרה למעלה -->
-    <button id="back-to-top-btn" class="back-to-top-btn" title="חזרה לראש העמוד">↑</button>
 
     <script src="script.js?v=12.0"></script>
 </body>
