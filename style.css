@@ -9,7 +9,8 @@
 html, body {
     width: 100%;
     min-height: 100vh;
-    background-color: #d8cebc; /* רקע שמפניה-טאופ חם ועמוק */
+    background-color: #d8cebc;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 body {
@@ -18,7 +19,42 @@ body {
     padding: 20px;
 }
 
-/* מבנה העמוד המקורי - 3 טורחים יציבים בשורה אחת בלי קפיצות */
+/* === מצב כהה (Dark Mode) === */
+body.dark-mode {
+    background-color: #1e1e24;
+    color: #e0e0e0;
+}
+
+body.dark-mode .sidebar,
+body.dark-mode .content-center,
+body.dark-mode .event-row-item,
+body.dark-mode .ticker-card {
+    background: #2b2b36;
+    border-color: #3f3f4e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .page-header h1,
+body.dark-mode .event-main-info,
+body.dark-mode .card-title,
+body.dark-mode .sidebar-header h2 {
+    color: #f1f5f9;
+}
+
+body.dark-mode .search-box input {
+    background: #1e1e24;
+    border-color: #3f3f4e;
+    color: #ffffff;
+}
+
+body.dark-mode .moovit-btn,
+body.dark-mode .action-btn {
+    background: #383846;
+    border-color: #4a4a5a;
+    color: #e0e0e0;
+}
+
+/* מבנה העמוד */
 .main-layout {
     display: flex;
     gap: 20px;
@@ -28,7 +64,6 @@ body {
     flex-wrap: nowrap;
 }
 
-/* סיידבר שמאלי / ימני */
 .sidebar {
     width: 280px;
     min-width: 280px;
@@ -39,7 +74,6 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* אזור מרכזי */
 .content-center {
     flex-grow: 1;
     background: #ffffff;
@@ -49,10 +83,27 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* כותרת ראשית */
+/* כותרת ומצב לילה */
 .page-header {
     text-align: center;
     margin-bottom: 20px;
+    position: relative;
+}
+
+.header-top-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.btn-theme-toggle {
+    background: transparent;
+    border: 1px solid #c8bda8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    color: inherit;
 }
 
 .page-header h1 {
@@ -68,7 +119,6 @@ body {
     margin-bottom: 15px;
 }
 
-/* כפתור הוספת שמחה */
 .btn-add-event {
     background: #fbf7f0;
     color: #92400e;
@@ -85,7 +135,7 @@ body {
     background: #fef3c7;
 }
 
-/* אזור כפתור הוספת עדכון - ממורכז בתיבה השמאלית */
+/* סיידבר שמאלי */
 .sidebar-header {
     display: flex;
     flex-direction: column;
@@ -110,58 +160,21 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: block;
-    margin: 0 auto;
 }
 
-.btn-add-update:hover {
-    background: #f5f5f4;
-}
-
-/* תיבת עדכונים עם גובה קבוע וגלילה פנימית (הגודל שביקשת בשמאל) */
-#updates-ticker {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-left: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#updates-ticker::-webkit-scrollbar,
-#events-list::-webkit-scrollbar {
-    width: 5px;
-}
-
-#updates-ticker::-webkit-scrollbar-track,
-#events-list::-webkit-scrollbar-track {
-    background: #f1ede4;
-    border-radius: 4px;
-}
-
-#updates-ticker::-webkit-scrollbar-thumb,
-#events-list::-webkit-scrollbar-thumb {
-    background: #c8bda8;
-    border-radius: 4px;
-}
-
-#updates-ticker::-webkit-scrollbar-thumb:hover,
-#events-list::-webkit-scrollbar-thumb:hover {
-    background: #b45309;
-}
-
-/* סרגל חיפוש וסינון */
+/* חיפוש וסינון */
 .filter-section {
     margin-bottom: 20px;
 }
 
 .search-box {
+    position: relative;
     margin-bottom: 10px;
 }
 
 .search-box input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px 35px 10px 12px;
     border: 1px solid #d7d3d0;
     border-radius: 8px;
     font-size: 14px;
@@ -169,9 +182,16 @@ body {
     background: #fafaf9;
 }
 
-.search-box input:focus {
-    border-color: #d97706;
-    background: #ffffff;
+.clear-search-btn {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #999;
+    cursor: pointer;
 }
 
 .filter-buttons {
@@ -197,16 +217,15 @@ body {
     border-color: #fde68a;
 }
 
-/* רשימת האירועים המרכזית עם גלילה */
+/* רשימת אירועים */
 #events-list {
     max-height: 550px;
     overflow-y: auto;
     padding-left: 5px;
 }
 
-/* עיצוב כרטיסי השמחות במרכז - שומר על המבנה המקורי אבל ממורכז לאמצע המסגרת */
 .event-row-item {
-    position: relative; /* נוסף כדי שהתגית תיצמד לכרטיס */
+    position: relative;
     background: #ffffff;
     border: 1px solid #dcd3c0;
     border-radius: 10px;
@@ -214,23 +233,26 @@ body {
     margin-bottom: 14px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* מרכוז התוכן לאמצע המסגרת */
-    text-align: center;  /* יישור הטקסט לאמצע */
+    align-items: center;
+    text-align: center;
     gap: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
-/* עיצוב תגית ספירת הימים בצד שמאל של כרטיס האירוע */
+/* הדגשת אירועים קרובים (היום/מחר) */
+.event-row-item.highlight-urgent {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+}
+
 .countdown-badge {
     position: absolute;
     left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 16px;
     font-size: 13px;
     font-weight: 700;
     padding: 6px 14px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
 }
 
 .countdown-badge.normal {
@@ -243,14 +265,12 @@ body {
     background: #fef3c7;
     color: #b45309;
     border: 1px solid #fde68a;
-    box-shadow: 0 2px 6px rgba(180, 83, 9, 0.15);
 }
 
-/* שורה ראשונה: סטטוס, שם, קו הפרדה וכיתה */
 .event-header-row {
     display: flex;
     align-items: center;
-    justify-content: center; /* מרכוז אופקי לאמצע */
+    justify-content: center;
     gap: 10px;
     flex-wrap: wrap;
     width: 100%;
@@ -264,127 +284,68 @@ body {
     font-weight: bold;
 }
 
-.badge-wedding {
-    background: #fdf2f8;
-    color: #db2777;
-}
+.badge-wedding { background: #fdf2f8; color: #db2777; }
+.badge-engagement { background: #eff6ff; color: #2563eb; }
 
-.badge-engagement {
-    background: #eff6ff;
-    color: #2563eb;
-}
+.event-main-info { font-size: 18px; font-weight: 700; }
+.event-date-row { font-size: 14px; color: #15803d; font-weight: 600; }
+.event-location-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
 
-.event-main-info {
-    font-size: 18px;
-    color: #1c1917;
-    font-weight: 700;
-    margin: 0;
-}
-
-.event-divider {
-    color: #b4a895;
-    font-weight: 400;
-}
-
-.event-class-track {
-    font-size: 13px;
-    color: #78716c;
-}
-
-/* שורה שנייה: תאריך האירוע (בירוק וממורכז) */
-.event-date-row {
-    font-size: 14px;
-    color: #15803d;
-    font-weight: 600;
-    width: 100%;
-    text-align: center;
-}
-
-/* שורה שלישית: אולם וכפתורי ניווט */
-.event-location-row {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* מרכוז אופקי לאמצע */
-    gap: 10px;
-    font-size: 14px;
-    color: #57534e;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-/* כפתורי ניווט */
-.moovit-btn {
+.moovit-btn, .action-btn {
     display: inline-flex;
     align-items: center;
     background: #fafaf9;
     border: 1px solid #d7d3d0;
-    padding: 3px 10px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
     font-size: 12px;
     color: #44403c;
     text-decoration: none;
+    transition: background 0.2s;
 }
 
-.moovit-btn:hover {
-    background: #f0eae1;
-}
+.moovit-btn:hover, .action-btn:hover { background: #f0eae1; }
 
-/* כרטיסי טיקר */
-.ticker-container {
+.event-actions-row {
     display: flex;
-    flex-direction: column;
     gap: 10px;
+    margin-top: 5px;
 }
 
-.ticker-card {
-    background: #fafaf9;
-    border: 1px solid #dcd3c0;
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 13px;
+.wa-btn { color: #15803d; border-color: #bbf7d0; background: #f0fdf4; }
+.cal-btn { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
+
+/* כפתור חזרה למעלה */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #b45309;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 100;
 }
 
-.ticker-card.past {
-    border-right: 4px solid #b45309;
-}
+.back-to-top-btn.visible { display: block; }
 
-.card-title {
-    font-weight: bold;
-    color: #1c1917;
-    margin-bottom: 3px;
-}
-
-.card-body {
-    color: #57534e;
-    margin-bottom: 3px;
-}
-
-.card-date {
-    color: #a8a29e;
-    font-size: 11px;
-}
-
-.no-results {
-    text-align: center;
-    padding: 20px;
-    color: #a8a29e;
-}
-
-/* אזור אודות */
-.about-section {
-    margin-top: 25px;
-    padding-top: 15px;
-    border-top: 1px solid #c8bda8;
-}
-
-.about-section h2 {
-    font-size: 15px;
-    color: #1c1917;
-    margin-bottom: 5px;
-}
-
-.about-section p {
-    font-size: 13px;
-    color: #78716c;
-    line-height: 1.4;
+/* התאמה למכשירים ניידים */
+@media (max-width: 900px) {
+    .main-layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        min-width: 100%;
+    }
+    .countdown-badge {
+        position: static;
+        margin-bottom: 5px;
+    }
 }
