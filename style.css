@@ -1,351 +1,67 @@
-/* הגדרות בסיס ורקע */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-html, body {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #d8cebc;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body {
-    color: #2c3e50;
-    direction: rtl;
-    padding: 20px;
-}
-
-/* === מצב כהה (Dark Mode) === */
-body.dark-mode {
-    background-color: #1e1e24;
-    color: #e0e0e0;
-}
-
-body.dark-mode .sidebar,
-body.dark-mode .content-center,
-body.dark-mode .event-row-item,
-body.dark-mode .ticker-card {
-    background: #2b2b36;
-    border-color: #3f3f4e;
-    color: #e0e0e0;
-}
-
-body.dark-mode .page-header h1,
-body.dark-mode .event-main-info,
-body.dark-mode .card-title,
-body.dark-mode .sidebar-header h2 {
-    color: #f1f5f9;
-}
-
-body.dark-mode .search-box input {
-    background: #1e1e24;
-    border-color: #3f3f4e;
-    color: #ffffff;
-}
-
-body.dark-mode .moovit-btn,
-body.dark-mode .action-btn {
-    background: #383846;
-    border-color: #4a4a5a;
-    color: #e0e0e0;
-}
-
-/* מבנה העמוד */
-.main-layout {
-    display: flex;
-    gap: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-}
-
-.sidebar {
-    width: 280px;
-    min-width: 280px;
-    background: #ffffff;
-    border: 1px solid #c8bda8;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.content-center {
-    flex-grow: 1;
-    background: #ffffff;
-    border: 1px solid #c8bda8;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* כותרת ומצב לילה */
-.page-header {
-    text-align: center;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.header-top-bar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
-
-.btn-theme-toggle {
-    background: transparent;
-    border: 1px solid #c8bda8;
-    padding: 5px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 12px;
-    color: inherit;
-}
-
-.page-header h1 {
-    font-size: 26px;
-    color: #1e293b;
-    margin-bottom: 5px;
-    font-weight: 700;
-}
-
-.subtitle {
-    color: #78716c;
-    font-size: 14px;
-    margin-bottom: 15px;
-}
-
-.btn-add-event {
-    background: #fbf7f0;
-    color: #92400e;
-    border: 1px solid #fde68a;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-add-event:hover {
-    background: #fef3c7;
-}
-
-/* סיידבר שמאלי */
-.sidebar-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.sidebar-header h2 {
-    font-size: 16px;
-    color: #1e293b;
-}
-
-.btn-add-update {
-    background: #fbf7f0;
-    color: #57534e;
-    border: 1px solid #d7d3d0;
-    padding: 8px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-/* חיפוש וסינון */
-.filter-section {
-    margin-bottom: 20px;
-}
-
-.search-box {
-    position: relative;
-    margin-bottom: 10px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 10px 35px 10px 12px;
-    border: 1px solid #d7d3d0;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    background: #fafaf9;
-}
-
-.clear-search-btn {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 14px;
-    color: #999;
-    cursor: pointer;
-}
-
-.filter-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.filter-btn {
-    flex: 1;
-    padding: 8px;
-    background: #fafaf9;
-    border: 1px solid #d7d3d0;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    color: #57534e;
-    transition: all 0.2s;
-}
-
-.filter-btn.active {
-    background: #fef3c7;
-    color: #92400e;
-    border-color: #fde68a;
-}
-
-/* רשימת אירועים */
-#events-list {
-    max-height: 550px;
+/* עיצוב כללי לסיידברים */
+#updates-ticker,
+#past-events-ticker {
+    max-height: 400px;
     overflow-y: auto;
     padding-left: 5px;
-}
-
-.event-row-item {
-    position: relative;
-    background: #ffffff;
-    border: 1px solid #dcd3c0;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 14px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    gap: 12px; /* רווח נקי וברור בין מלבן למלבן */
 }
 
-/* הדגשת אירועים קרובים (היום/מחר) */
-.event-row-item.highlight-urgent {
-    border: 2px solid #f59e0b;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
-}
-
-.countdown-badge {
-    position: absolute;
-    left: 16px;
-    top: 16px;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 8px;
-}
-
-.countdown-badge.normal {
-    background: #f3f4f6;
-    color: #4b5563;
-    border: 1px solid #d1d5db;
-}
-
-.countdown-badge.urgent {
-    background: #fef3c7;
-    color: #b45309;
-    border: 1px solid #fde68a;
-}
-
-.event-header-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.badge {
-    display: inline-block;
-    padding: 3px 10px;
-    font-size: 12px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.badge-wedding { background: #fdf2f8; color: #db2777; }
-.badge-engagement { background: #eff6ff; color: #2563eb; }
-
-.event-main-info { font-size: 18px; font-weight: 700; }
-.event-date-row { font-size: 14px; color: #15803d; font-weight: 600; }
-.event-location-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-
-.moovit-btn, .action-btn {
-    display: inline-flex;
-    align-items: center;
+/* עיצוב הכרטיסים/המלבנים */
+.ticker-card {
     background: #fafaf9;
-    border: 1px solid #d7d3d0;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    color: #44403c;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-
-.moovit-btn:hover, .action-btn:hover { background: #f0eae1; }
-
-.event-actions-row {
+    border: 1px solid #dcd3c0;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
     display: flex;
-    gap: 10px;
-    margin-top: 5px;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-.wa-btn { color: #15803d; border-color: #bbf7d0; background: #f0fdf4; }
-.cal-btn { color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; }
-
-/* כפתור חזרה למעלה */
-.back-to-top-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #b45309;
-    color: #fff;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    display: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 100;
+/* כרטיס אירוע שהיה - מרווח עליון מוגדל כדי למנוע דריסת טקסט */
+.ticker-card.past {
+    border-right: 4px solid #b45309;
+    padding-top: 28px;
 }
 
-.back-to-top-btn.visible { display: block; }
+/* תגית הזמן "לפני X ימים" - צמודה לפינה בלי לחסום תוכן */
+.past-time-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 7px;
+}
 
-/* התאמה למכשירים ניידים */
-@media (max-width: 900px) {
-    .main-layout {
-        flex-direction: column;
-    }
-    .sidebar {
-        width: 100%;
-        min-width: 100%;
-    }
-    .countdown-badge {
-        position: static;
-        margin-bottom: 5px;
-    }
+/* כותרת הכרטיס */
+.card-title {
+    font-weight: bold;
+    color: #1c1917;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+/* תוכן הכרטיס */
+.card-body {
+    color: #57534e;
+    font-size: 13px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* תאריך בתחתית */
+.card-date {
+    color: #a8a29e;
+    font-size: 11px;
+    margin-top: 2px;
 }
