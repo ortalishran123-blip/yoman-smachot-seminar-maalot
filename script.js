@@ -1,4 +1,4 @@
-[cite: 1]const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv'; 
+const MAIN_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVr_HitWp_UPFptrGvBLcBmgbVCLL2q10Mtn-imC-re1yTluKSIj3pxAkFw7Uo6fh6vnuhTefulJYb/pub?output=csv'; 
 const UPDATES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrG166hqo09whjz3w7F5zKJTHqJ7gIL93sU7p5zy4T7w7FkAdHuzNShKvIK1K5WxXTCzJB4z3I-3-d/pub?output=csv'; 
 
 const EVENT_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-TX5InPNbEoZrM4sDcTJN20k9Ku8YcA-AjAXvMHWSdNkWkg/viewform'; 
@@ -112,7 +112,6 @@ function renderMainEvents() {
         if (dateGregorian) {
             const eventDate = parseDate(dateGregorian);
             if (eventDate) {
-                // חישוב היום בשבוע בעברית
                 const days = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'שבת'];
                 dayOfWeekText = days[eventDate.getDay()];
 
@@ -234,7 +233,6 @@ function renderPastEventsTicker(events) {
         return false; 
     });
 
-    // מיון האירועים שהיו בסדר יורד (מהאירוע האחרון והקרוב ביותר להיום)
     pastEvents.sort((a, b) => {
         const dateA = parseDate(getRowValue(a, ['תאריך לועזי', 'תאריך']));
         const dateB = parseDate(getRowValue(b, ['תאריך לועזי', 'תאריך']));
@@ -339,8 +337,10 @@ function parseDate(dateStr) {
         let year = parseInt(parts[2], 10); 
         if (year < 100) year += 2000; 
         const d = new Date(year, month, day); 
-        d.setHours(0, 0, 0, 0); 
-        return d; 
+        if (!isNaN(d.getTime())) {
+            d.setHours(0, 0, 0, 0); 
+            return d;
+        }
     }
     return null; 
 }
